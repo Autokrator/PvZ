@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QCloseEvent>
+#include <QTextStream>
+#include <QFile>
+#include <QStringList>
 
 namespace Ui {
 class NewUserDialog;
@@ -22,7 +25,10 @@ private slots:
 
 private:
     Ui::NewUserDialog *ui;
-    QString inputUserName;
+    QString inputUserName; //holds valid username
+    QStringList playerList; //holds list of players read from file
+    void writeToPlayerFile(QString file_name); //updates player file after new player
+    void readFromPlayerFile(QString file_name); //remembers previous players in file
     void closeEvent(QCloseEvent *event);
 
 

@@ -2,13 +2,14 @@
 #include "ui_newuserdialog.h"
 #include <QMessageBox>
 #include <QDebug>
-#include <QByteArray>
+#include <QDateTime>
 
 NewUserDialog::NewUserDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewUserDialog)
 {
     ui->setupUi(this);
+    inputUserName = "Guest"; //Default username
 }
 
 NewUserDialog::~NewUserDialog()
@@ -57,9 +58,56 @@ void NewUserDialog::on_okButton_clicked()
 
             //Closes the dialog if yes is chosen
             if(answer == QMessageBox::Yes)
-                close();
+            {
+                //Saves the new player info to rvz_players.csv
+                writeToPlayerFile("/Users/Parth/Documents/QT/RvZ/rvz_players.csv");
+                close(); //calls the destructor for dialog
+            }
         }
     }
+}
+
+void NewUserDialog::writeToPlayerFile(QString file_name)
+{
+    QFile username_file(file_name);
+    readFromPlayerFile(file_name); //updates playerList to remember previous players
+
+    //Displays warning if file is not writable
+    if(!username_file.open(QIODevice::WriteOnly|QIODevice::Text))
+        QMessageBox::warning(this,tr("Error!"),tr("Error writing to rvz_players.csv! No new user created"),
+                                     QMessageBox::Ok);
+
+    QTextStream write_users(&username_file);
+
+    for(int i = 0; i < playerList.length(); i++)
+        write_users << playerList.at(i) << "\n"; //Rewrites previous players
+
+    //Writes new player with timestamp and level
+    write_users << QDateTime::currentDateTime().toString("[dd.MM.yyyy hh:mm:ss:zzz]:")
+                << inputUserName << ":1,"; //":1" because all new players start at level 1
+
+    //closes file
+    username_file.close();
+
+}
+
+void NewUserDialog::readFromPlayerFile(QString file_name)
+{
+    QFile username_file(file_name);
+
+    //Displays warning if file is not readable
+    if(!username_file.open(QIODevice::ReadOnly|QIODevice::Text))
+        QMessageBox::warning(this,tr("Error!"),tr("Error reading rvz_players.csv!"),
+                                     QMessageBox::Ok);
+
+    QTextStream read_users(&username_file);
+
+    //Makes a list of the players in the file to remember when updating
+    while(!read_users.atEnd())
+        playerList.append(read_users.readLine());
+
+    //closes file
+    username_file.close();
 }
 
 void NewUserDialog::closeEvent(QCloseEvent *event)
