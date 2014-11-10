@@ -113,7 +113,7 @@ void NewUserDialog::readFromPlayerFile(QString file_name)
 void NewUserDialog::closeEvent(QCloseEvent *event)
 {
     //Signals to show mainwindow and delete newUserUi pointer in mainwindow.cpp
-    showMainWindow(1);
+    changeButtonState(1);
     deleteNewUserDialog(1);
     event->accept(); //Closes the dialog
 }

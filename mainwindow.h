@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "gamewindow.h"
 #include "newuserdialog.h"
+#include "existinguserdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,8 @@ private slots:
     void deleteGameWindow(); //calls the destructor of game window object
 
     void deleteNewUserDialog(); //calls the destructor of new user dialog object
+
+    void changeButtonState(bool); //enables and disables buttons
 
 private:
     Ui::MainWindow *ui;

@@ -33,7 +33,7 @@ private:
 
 
 signals:
-    void showMainWindow(bool);
+    void changeButtonState(bool);
     void deleteNewUserDialog(bool);
 };
 

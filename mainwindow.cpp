@@ -26,16 +26,19 @@ void MainWindow::on_newUserButton_clicked()
     //Opens new dialog asking for username information
     newUserUi = new NewUserDialog(this);
     newUserUi->show(); //Shows dailog to enter a username
+    changeButtonState(false);
 
     //Connects the mainwindow with the new user dialog
-    connect(newUserUi,SIGNAL(showMainWindow(bool)),this,SLOT(show()));
+    connect(newUserUi,SIGNAL(changeButtonState(bool)),this,SLOT(changeButtonState(bool)));
     connect(newUserUi,SIGNAL(deleteNewUserDialog(bool)),this,SLOT(deleteNewUserDialog()));
 
-    hide(); //hides the main window while the new dialog is active
+    //hide(); //hides the main window while the new dialog is active
 }
 
 void MainWindow::on_existUserButton_clicked()
 {
+    ExistingUserDialog exist;
+    exist.exec();
 
 }
 
@@ -74,6 +77,13 @@ void MainWindow::deleteNewUserDialog()
     //Calls the NewUserDialog destructor
     delete newUserUi;
     newUserUi = NULL;
+}
+
+void MainWindow::changeButtonState(bool change)
+{
+    ui->startButton->setEnabled(change);
+    ui->newUserButton->setEnabled(change);
+    ui->existUserButton->setEnabled(change);
 }
 
 QString MainWindow::getStatusMessage()
