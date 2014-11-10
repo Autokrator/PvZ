@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QMessageBox>
+#include <QDebug>
 
 namespace Ui {
 class GameWindow;
@@ -22,6 +24,7 @@ private:
 
 signals:
     void showMainWindow(bool);
+    void deleteGameWindow(bool);
 
 };
 

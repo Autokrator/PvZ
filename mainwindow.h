@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "gamewindow.h"
+#include "newuserdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,9 +25,14 @@ private slots:
 
     void on_quitButton_clicked();
 
+    void deleteGameWindow(); //calls the destructor of game window object
+
+    void deleteNewUserDialog(); //calls the destructor of new user dialog object
+
 private:
     Ui::MainWindow *ui;
     GameWindow *gameUi; //game window for when to start the game
+    NewUserDialog *newUserUi;
     QString userName;  //holds user name information
     QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message

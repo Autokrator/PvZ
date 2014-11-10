@@ -6,8 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    gameUi = new GameWindow(this);
-    connect(gameUi,SIGNAL(showMainWindow(bool)),this,SLOT(show()));
 
     //Default user and level information
     userName = "Guest";
@@ -20,12 +18,20 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete gameUi;
+    qDebug() << "ui deleted";
 }
 
 void MainWindow::on_newUserButton_clicked()
 {
+    //Opens new dialog asking for username information
+    newUserUi = new NewUserDialog(this);
+    newUserUi->show(); //Shows dailog to enter a username
 
+    //Connects the mainwindow with the new user dialog
+    connect(newUserUi,SIGNAL(showMainWindow(bool)),this,SLOT(show()));
+    connect(newUserUi,SIGNAL(deleteNewUserDialog(bool)),this,SLOT(deleteNewUserDialog()));
+
+    hide(); //hides the main window while the new dialog is active
 }
 
 void MainWindow::on_existUserButton_clicked()
@@ -35,10 +41,15 @@ void MainWindow::on_existUserButton_clicked()
 
 void MainWindow::on_startButton_clicked()
 {
-    //Opens game window which contains the graphics view
+    //Creates a GameWindow object and connects it to the main window
+    gameUi = new GameWindow(this);
+    connect(gameUi,SIGNAL(showMainWindow(bool)),this,SLOT(show()));
+    connect(gameUi,SIGNAL(deleteGameWindow(bool)),this,SLOT(deleteGameWindow()));
+
+    //Opens the game window and updates status message
     gameUi->show();
     gameUi->setStatusMessage(getStatusMessage()); //game window status info
-    hide();
+    hide(); //hides the mainwindow while game window is active
 }
 
 void MainWindow::on_quitButton_clicked()
@@ -47,12 +58,30 @@ void MainWindow::on_quitButton_clicked()
     close();
 }
 
+void MainWindow::deleteGameWindow()
+{
+    //Deletes all information of previous game window
+    delete gameUi;
+    gameUi = NULL;
+}
+
+void MainWindow::deleteNewUserDialog()
+{
+    //Takes the user information from the dialog
+    userName = newUserUi->getUserName();
+    ui->statusBar->showMessage(getStatusMessage());
+
+    //Calls the NewUserDialog destructor
+    delete newUserUi;
+    newUserUi = NULL;
+}
+
 QString MainWindow::getStatusMessage()
 {
     //Builds status message based on active user and level
-    QString statusMessage;
-    statusMessage = "User: " + userName;
-    statusMessage = statusMessage.leftJustified(36, ' ') + "Level: " + userLevel;
+    QString status_message;
+    status_message = "User: " + userName;
+    status_message = status_message.leftJustified(36, ' ') + "Level: " + userLevel;
 
-    return statusMessage;
+    return status_message;
 }

@@ -1,7 +1,6 @@
 #include "gamewindow.h"
 #include "ui_gamewindow.h"
-#include <QMessageBox>
-#include "mainwindow.h"
+
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GameWindow)
@@ -13,6 +12,7 @@ GameWindow::GameWindow(QWidget *parent) :
 GameWindow::~GameWindow()
 {
     delete ui;
+    qDebug() << "dest called";
 }
 
 void GameWindow::setStatusMessage(const QString &message)
@@ -22,8 +22,20 @@ void GameWindow::setStatusMessage(const QString &message)
 }
 void GameWindow::closeEvent (QCloseEvent *event)
 {
-    event->accept();
-    showMainWindow(1);
+    QMessageBox::StandardButton answer;
+    answer = QMessageBox::question(this, tr("Exit Location"), tr("Would you like to exit to the main menu?"),
+                                   QMessageBox::Yes|QMessageBox::No);
+    if(answer == QMessageBox::Yes)
+    {
+        event->accept();
+        showMainWindow(1);
+        deleteGameWindow(1);
+    }
+    else
+    {
+        event->accept();
+        deleteGameWindow(1);
+    }
 }
 
 
