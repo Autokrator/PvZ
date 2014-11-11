@@ -19,6 +19,7 @@ class ExistingUserDialog : public QDialog
 public:
     explicit ExistingUserDialog(QWidget *parent = 0);
     ~ExistingUserDialog();
+    QString getUsername() const; //returns username to mainwindow
 
 private slots:
     void on_deleteButton_clicked();
@@ -30,7 +31,13 @@ private slots:
 private:
     Ui::ExistingUserDialog *ui;
     QStringList playerList;
-    void readFromPlayerFile(QString file_name);
+    QString inputUser; //holds valid username
+    void readFromPlayerFile();
+    void closeEvent(QCloseEvent *event);
+
+signals:
+    void changeButtonState(bool);
+    void deleteExistingUserDialog(bool);
 };
 
 #endif // EXISTINGUSERDIALOG_H

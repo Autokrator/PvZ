@@ -37,9 +37,12 @@ void MainWindow::on_newUserButton_clicked()
 
 void MainWindow::on_existUserButton_clicked()
 {
-    ExistingUserDialog exist;
-    exist.exec();
+    existUserUi = new ExistingUserDialog(this);
+    existUserUi->show();
+    changeButtonState(false);
 
+    connect(existUserUi,SIGNAL(changeButtonState(bool)),this,SLOT(changeButtonState(bool)));
+    connect(existUserUi,SIGNAL(deleteExistingUserDialog(bool)),this,SLOT(deleteExistUserDialog()));
 }
 
 void MainWindow::on_startButton_clicked()
@@ -70,9 +73,13 @@ void MainWindow::deleteGameWindow()
 
 void MainWindow::deleteNewUserDialog()
 {
-    //Takes the user information from the dialog
-    userName = newUserUi->getUserName();
-    ui->statusBar->showMessage(getStatusMessage());
+    //Ensures username is not reset if dialog is closed
+    if(newUserUi->getUserName() != "Guest")
+    {
+        //Takes the user information from the dialog
+        userName = newUserUi->getUserName();
+        ui->statusBar->showMessage(getStatusMessage()); //updates statusbar
+    }
 
     //Calls the NewUserDialog destructor
     delete newUserUi;
@@ -84,6 +91,21 @@ void MainWindow::changeButtonState(bool change)
     ui->startButton->setEnabled(change);
     ui->newUserButton->setEnabled(change);
     ui->existUserButton->setEnabled(change);
+}
+
+void MainWindow::deleteExistUserDialog()
+{
+    //Ensures username is not reset if dialog is closed
+    if(existUserUi->getUsername() != "Guest")
+    {
+        //Takes the user information from dialog
+        userName = existUserUi->getUsername();
+        ui->statusBar->showMessage(getStatusMessage()); //updates statusbar
+    }
+
+    //Calls the ExistingUserDialog destructor
+    delete existUserUi;
+    existUserUi = NULL;
 }
 
 QString MainWindow::getStatusMessage()

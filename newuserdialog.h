@@ -18,7 +18,7 @@ class NewUserDialog : public QDialog
 public:
     explicit NewUserDialog(QWidget *parent = 0);
     ~NewUserDialog();
-    QString getUserName();
+    QString getUserName() const;
 
 private slots:
     void on_okButton_clicked();

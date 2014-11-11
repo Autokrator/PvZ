@@ -32,10 +32,13 @@ private slots:
 
     void changeButtonState(bool); //enables and disables buttons
 
+    void deleteExistUserDialog(); //calls the destructor of existing user dialog
+
 private:
     Ui::MainWindow *ui;
     GameWindow *gameUi; //game window for when to start the game
     NewUserDialog *newUserUi;
+    ExistingUserDialog *existUserUi;
     QString userName;  //holds user name information
     QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message

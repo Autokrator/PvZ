@@ -18,7 +18,7 @@ NewUserDialog::~NewUserDialog()
     delete ui;
 }
 
-QString NewUserDialog::getUserName()
+QString NewUserDialog::getUserName() const
 {
     return inputUserName;
 }
@@ -84,7 +84,7 @@ void NewUserDialog::writeToPlayerFile(QString file_name)
 
     //Writes new player with timestamp and level
     write_users << QDateTime::currentDateTime().toString("[dd.MM.yyyy hh:mm:ss:zzz]:")
-                << inputUserName << ":1,"; //":1" because all new players start at level 1
+                << inputUserName << ":1,\n"; //":1" because all new players start at level 1
 
     //closes file
     username_file.close();
@@ -112,7 +112,7 @@ void NewUserDialog::readFromPlayerFile(QString file_name)
 
 void NewUserDialog::closeEvent(QCloseEvent *event)
 {
-    //Signals to show mainwindow and delete newUserUi pointer in mainwindow.cpp
+    //Signals to activate mainwindow buttons and delete newUserUi pointer in mainwindow.cpp
     changeButtonState(1);
     deleteNewUserDialog(1);
     event->accept(); //Closes the dialog
