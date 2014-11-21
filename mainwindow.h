@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "gamewindow.h"
 #include "newuserdialog.h"
 #include "existinguserdialog.h"
+#include <QImage>
+#include "gamescreen.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,12 +37,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    GameWindow *gameUi; //game window for when to start the game
+    GameScreen *gameUi; //game window for when to start the game
     NewUserDialog *newUserUi;
     ExistingUserDialog *existUserUi;
     QString userName;  //holds user name information
     QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message
+    QImage *image; //holds logo image
 };
 
 #endif // MAINWINDOW_H

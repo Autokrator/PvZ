@@ -20,6 +20,7 @@ public:
     explicit ExistingUserDialog(QWidget *parent = 0);
     ~ExistingUserDialog();
     QString getUsername() const; //returns username to mainwindow
+    QString getLevel() const; //returns level to mainwindow
 
 private slots:
     void on_deleteButton_clicked();
@@ -32,12 +33,13 @@ private:
     Ui::ExistingUserDialog *ui;
     QStringList playerList;
     QString inputUser; //holds valid username
+    QString userLevel; //holds level for a user
     void readFromPlayerFile();
     void closeEvent(QCloseEvent *event);
 
 signals:
     void changeButtonState(bool);
-    void deleteExistingUserDialog(bool);
+    void deleteExistingUserDialog();
 };
 
 #endif // EXISTINGUSERDIALOG_H

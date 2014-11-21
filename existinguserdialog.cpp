@@ -22,6 +22,11 @@ QString ExistingUserDialog::getUsername() const
     return inputUser;
 }
 
+QString ExistingUserDialog::getLevel() const
+{
+    return userLevel;
+}
+
 
 void ExistingUserDialog::on_deleteButton_clicked()
 {
@@ -63,6 +68,35 @@ void ExistingUserDialog::on_selectButton_clicked()
 {
     //Saves the currently active text in the combo box as the seletected user
     inputUser = ui->playerListBox->currentText();
+
+    //Getting the level information for selected user
+    QFile username_file(FileName);
+
+    playerList.clear(); //clears playerList from previous read calls
+
+    //Displays warning if file is not readable
+    if(!username_file.open(QIODevice::ReadOnly|QIODevice::Text))
+        QMessageBox::warning(this,tr("Error!"),tr("Error reading rvz_players.csv!"),
+                                     QMessageBox::Ok);
+
+    QTextStream read_users(&username_file);
+
+    //Makes a list of the players in the file to remember when updating
+    while(!read_users.atEnd())
+        playerList.append(read_users.readLine());
+
+    for(int i = 0; i < playerList.length(); i++)
+    {
+        //Creates temp list to hold pieces of each line
+        QStringList temp_list;
+        temp_list = playerList.at(i).split(':');
+
+        //Gets the level for the selected user based on index in temp_list
+        if(inputUser == temp_list.at(4))
+            userLevel = temp_list.at(5).split(',').at(0); //removes extra ',' after level
+    }
+
+    username_file.close(); //closes file
     close(); //closes dialog
 }
 
@@ -117,6 +151,6 @@ void ExistingUserDialog::closeEvent(QCloseEvent *event)
 {
     //Signals to activate mainwindow buttons and delete dialog pointer in mainwindow.cpp
     changeButtonState(1);
-    deleteExistingUserDialog(1);
+    deleteExistingUserDialog();
     event->accept(); //closes dialog
 }

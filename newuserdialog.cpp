@@ -114,6 +114,6 @@ void NewUserDialog::closeEvent(QCloseEvent *event)
 {
     //Signals to activate mainwindow buttons and delete newUserUi pointer in mainwindow.cpp
     changeButtonState(1);
-    deleteNewUserDialog(1);
+    deleteNewUserDialog();
     event->accept(); //Closes the dialog
 }

@@ -34,7 +34,7 @@ private:
 
 signals:
     void changeButtonState(bool);
-    void deleteNewUserDialog(bool);
+    void deleteNewUserDialog();
 };
 
 #endif // NEWUSERDIALOG_H

@@ -14,16 +14,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    gamewindow.cpp \
     newuserdialog.cpp \
-    existinguserdialog.cpp
+    existinguserdialog.cpp \
+    gamescreen.cpp
 
 HEADERS  += mainwindow.h \
-    gamewindow.h \
     newuserdialog.h \
-    existinguserdialog.h
+    existinguserdialog.h \
+    gamescreen.h
 
 FORMS    += mainwindow.ui \
-    gamewindow.ui \
     newuserdialog.ui \
     existinguserdialog.ui
+
+RESOURCES += \
+    Images.qrc
