@@ -43,7 +43,6 @@ private:
     QString userName;  //holds user name information
     QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message
-    QImage *image; //holds logo image
 };
 
 #endif // MAINWINDOW_H

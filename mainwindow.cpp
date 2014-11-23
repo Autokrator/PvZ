@@ -16,20 +16,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statusBar->showMessage(getStatusMessage());
 
     //Displays PvZ logo on mainwindow
-    QString logo_file = "/Users/Parth/Downloads/pvz_logo.png";
-    image = new QImage(logo_file,"PNG");
-    QPixmap logo_image = QPixmap::fromImage(*image);
+    QPixmap logo_image(":/Images/logo");
     ui->logoLabel->setScaledContents(1);
     ui->logoLabel->setPixmap(logo_image);
-
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete image; //deletes image
-
     qDebug() << "ui deleted";
 }
 

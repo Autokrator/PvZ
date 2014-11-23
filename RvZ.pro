@@ -16,16 +16,20 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     newuserdialog.cpp \
     existinguserdialog.cpp \
-    gamescreen.cpp
+    gamescreen.cpp \
+    sun.cpp \
+    gamehud.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
     existinguserdialog.h \
-    gamescreen.h
+    gamescreen.h \
+    sun.h \
+    gamehud.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \
     existinguserdialog.ui
 
 RESOURCES += \
-    Images.qrc
+    PvZ_assests.qrc

@@ -6,6 +6,10 @@
 #include <QMessageBox>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QMouseEvent>
+#include "sun.h"
+#include <vector>
+#include <QTimer>
 
 class GameScreen : public QGraphicsView
 {
@@ -14,14 +18,24 @@ public:
     explicit GameScreen(QWidget *parent = 0);
     ~GameScreen();
 private:
+    int sunPoints;
     void closeEvent(QCloseEvent *event);
+    void mouseMoveEvent(QMouseEvent *e);
+    void displaySunPoints() const;
     QGraphicsScene *scene;
+    QCursor *mouseCursor;
+    std::vector<Sun *> lights;
+    QTimer *timer;
+    QTimer *scoreTimer;
+    Sun *light1;
+    QGraphicsTextItem *sunPointsText;
 
 signals:
     void showMainWindow();
     void deleteGameWindow();
 
-public slots:
+private slots:
+    void updateSunPoints();
 
 };
 

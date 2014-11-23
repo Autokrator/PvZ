@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file alias="pvzBackground">RvZ_assests/pvz_background.jpg</file>
+        <file alias="mainCursor">RvZ_assests/cursor.png</file>
+        <file alias="logo">RvZ_assests/pvz_logo.png</file>
+        <file alias="sun">RvZ_assests/SunFA.png</file>
+    </qresource>
+</RCC>
