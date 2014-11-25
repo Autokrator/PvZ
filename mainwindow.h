@@ -40,8 +40,8 @@ private:
     GameScreen *gameUi; //game window for when to start the game
     NewUserDialog *newUserUi;
     ExistingUserDialog *existUserUi;
-    QString userName;  //holds user name information
-    QString userLevel; //holds level information for active user
+    static QString userName;  //holds user name information
+    static QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message
 };
 

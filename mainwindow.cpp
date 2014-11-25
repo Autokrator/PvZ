@@ -2,15 +2,15 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 
+//Default user and level information
+QString MainWindow::userName = "Guest";
+QString MainWindow::userLevel = "1";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    //Default user and level information
-    userName = "Guest";
-    userLevel = "1";
 
     //Displays current user and level information
     ui->statusBar->showMessage(getStatusMessage());
@@ -56,6 +56,9 @@ void MainWindow::on_startButton_clicked()
     gameUi = new GameScreen;
     connect(gameUi,SIGNAL(showMainWindow()),this,SLOT(show()));
     connect(gameUi,SIGNAL(deleteGameWindow()),this,SLOT(deleteGameWindow()));
+
+    //Passes player info gameScreen
+    gameUi->setPlayerInfo(userName,userLevel);
 
     //Opens the game window and updates status message
     gameUi->show();

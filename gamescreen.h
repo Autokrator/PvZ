@@ -7,7 +7,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QMouseEvent>
-#include "sun.h"
+#include "gamehud.h"
 #include <vector>
 #include <QTimer>
 
@@ -17,25 +17,29 @@ class GameScreen : public QGraphicsView
 public:
     explicit GameScreen(QWidget *parent = 0);
     ~GameScreen();
+    void setPlayerInfo(QString name,QString level);
 private:
     int sunPoints;
     void closeEvent(QCloseEvent *event);
-    void mouseMoveEvent(QMouseEvent *e);
     void displaySunPoints() const;
     QGraphicsScene *scene;
     QCursor *mouseCursor;
     std::vector<Sun *> lights;
     QTimer *timer;
+    QTimer *sunSpawnTimer;
     QTimer *scoreTimer;
     Sun *light1;
+    GameHud *Hud;
     QGraphicsTextItem *sunPointsText;
+    QString playerName;
+    QString playerLevel;
 
 signals:
     void showMainWindow();
     void deleteGameWindow();
 
 private slots:
-    void updateSunPoints();
+    void spawnSun();
 
 };
 

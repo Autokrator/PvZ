@@ -5,6 +5,7 @@ bool isLevelFileValid();
 
 int main(int argc, char *argv[])
 {
+
     //Construct application
     QApplication a(argc, argv);
     MainWindow w;

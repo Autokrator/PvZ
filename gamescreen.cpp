@@ -2,7 +2,7 @@
 #include <QDebug>
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent)
+    QGraphicsView(parent), playerName("Guest"), playerLevel("1")
 {
     sunPoints = 100; //Intializes sunpoints for session
 
@@ -26,27 +26,27 @@ GameScreen::GameScreen(QWidget *parent) :
     mouseCursor = new QCursor(QPixmap(":/Images/mainCursor"),0,0);
     this->setCursor(*mouseCursor);
 
-    //Sunpoints display
-    QBrush black(Qt::white);
-    QPen blackpen(Qt::black);
-    scene->addRect(10,10,200,150,blackpen,black)->setOpacity(0.5);
+    //Creates background for updating hud elements
+    QPixmap score_Background_note(":/Images/scoreBackgroundNote");
+    QPixmap score_Background(":/Images/scoreBackground");
+    scene->addPixmap(score_Background_note);
+    scene->addPixmap(score_Background)->setPos(score_Background.width(),0);
+    scene->addPixmap(score_Background)->setPos(score_Background.width()*2,0);
 
-    scoreTimer = new QTimer(this);
-    connect(scoreTimer,SIGNAL(timeout()),this,SLOT(updateSunPoints()));
-    scoreTimer->start(1000);
+    //Adds dynamic hud elements
+    Hud = new GameHud;
+    scene->addItem(Hud);
 
-    QGraphicsItem *plant = new QGraphicsPixmapItem(QPixmap("/Users/Parth/Documents/Qt/RvZ/RvZ_assests/SunFA.png"));
-    plant->setPos(500,400);
-    scene->addItem(plant);
-
-    light1 = new Sun;
-    scene->addItem(light1);
-
+    //Refresh rate of 20 ms
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),scene,SLOT(advance()));
-    timer->start(40);
+    timer->start(20);
 
-    //qDebug() << Sun::sunPoints;
+    //Spawns new sun every 10 seconds
+    sunSpawnTimer = new QTimer(this);
+    connect(sunSpawnTimer,SIGNAL(timeout()),this,SLOT(spawnSun()));
+    sunSpawnTimer->start(1000);
+
 
     QPoint initial(240,245);
 
@@ -54,9 +54,6 @@ GameScreen::GameScreen(QWidget *parent) :
     {
         for(int j = 0; j < 9; j++)
         {
-            light1 = new Sun;
-            scene->addItem(light1);
-
             QRect rect(initial.x(),initial.y(),80,96);
             scene->addRect(rect,QPen(Qt::black),QBrush(Qt::NoBrush));
             initial.setX(initial.x()+80);
@@ -71,6 +68,13 @@ GameScreen::~GameScreen()
     delete mouseCursor;
     delete scene;
     qDebug() << "dest called";
+}
+
+void GameScreen::setPlayerInfo(QString name, QString level)
+{
+    //Sets player in for gamescreen instance
+    Hud->user = name;
+    Hud->level = level;
 }
 
 void GameScreen::closeEvent(QCloseEvent *event)
@@ -98,20 +102,9 @@ void GameScreen::closeEvent(QCloseEvent *event)
         event->ignore(); //resumes game
 }
 
-void GameScreen::mouseMoveEvent(QMouseEvent *e)
+void GameScreen::spawnSun()
 {
-    qDebug() << e->pos();
+    light1 = new Sun;
+    scene->addItem(light1);
 }
 
-void GameScreen::displaySunPoints() const
-{
-
-}
-
-void GameScreen::updateSunPoints()
-{
-//    sunPoints = Sun::getSunPoints();
-//    sunPointsText->setPlainText(QString::number(sunPoints));
-//    sunPointsText->setPos(20,20);
-//    scene->addItem(sunPointsText);
-}

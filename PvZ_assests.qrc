@@ -4,5 +4,11 @@
         <file alias="mainCursor">RvZ_assests/cursor.png</file>
         <file alias="logo">RvZ_assests/pvz_logo.png</file>
         <file alias="sun">RvZ_assests/SunFA.png</file>
+        <file alias="scoreBackground">RvZ_assests/score_background.png</file>
+        <file alias="scoreBackgroundNote">RvZ_assests/score_background_note.png</file>
+        <file alias="sunDisplay">RvZ_assests/SunDisplay.png</file>
+    </qresource>
+    <qresource prefix="/Font">
+        <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>
     </qresource>
 </RCC>

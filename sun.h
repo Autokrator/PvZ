@@ -2,6 +2,7 @@
 #define SUN_H
 #include <QPainter>
 #include <QGraphicsItem>
+#include <QTime>
 
 class Sun : public QGraphicsItem
 {
@@ -22,6 +23,8 @@ private:
     QPixmap *sunImage;
     QSize sunSize;
     int type;
+    QTime *counter;
+    const int timeout;
     void paint(QPainter*,const QStyleOptionGraphicsItem*, QWidget*);
     QRectF boundingRect() const;
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
