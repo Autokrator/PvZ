@@ -113,7 +113,7 @@ void Sun::mousePressEvent(QGraphicsSceneMouseEvent *event)
     isClicked = true;
     update();
 
-    //Updates the number of sunpoints user now has
+    //Updates the number of sunpoints the user now has
     updateSunPoints(25);
     QGraphicsItem::mousePressEvent(event);
 }

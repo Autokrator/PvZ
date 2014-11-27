@@ -7,6 +7,18 @@
         <file alias="scoreBackground">RvZ_assests/score_background.png</file>
         <file alias="scoreBackgroundNote">RvZ_assests/score_background_note.png</file>
         <file alias="sunDisplay">RvZ_assests/SunDisplay.png</file>
+        <file alias="peashooterCard">RvZ_assests/peashooter_card.png</file>
+        <file alias="cherrybombCard">RvZ_assests/cherryBomb_card.png</file>
+        <file alias="sunflowerCard">RvZ_assests/sunflower_card.png</file>
+        <file alias="walnutCard">RvZ_assests/walnut_card.png</file>
+        <file alias="peashooter">RvZ_assests/peashooter.png</file>
+        <file alias="peashooterGray">RvZ_assests/peashooter_gray.png</file>
+        <file alias="sunflowerGray">RvZ_assests/Sunflower_gray.png</file>
+        <file alias="sunflower">RvZ_assests/Sunflower.png</file>
+        <file alias="walnutGray">RvZ_assests/Walnut_gray.png</file>
+        <file alias="walnut">RvZ_assests/Walnut.png</file>
+        <file alias="cherrybombGray">RvZ_assests/cherryBomb_gray.png</file>
+        <file alias="cherryBomb">RvZ_assests/cherryBomb.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

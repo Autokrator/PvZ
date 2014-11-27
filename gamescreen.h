@@ -19,20 +19,38 @@ public:
     ~GameScreen();
     void setPlayerInfo(QString name,QString level);
 private:
+    struct lawnPiece{
+        bool isPlantable;
+        int x, y, width, height;
+    };
+
+private:
     int sunPoints;
     void closeEvent(QCloseEvent *event);
     void displaySunPoints() const;
     QGraphicsScene *scene;
     QCursor *mouseCursor;
-    std::vector<Sun *> lights;
+    std::vector<lawnPiece> lawnVector;
     QTimer *timer;
     QTimer *sunSpawnTimer;
     QTimer *scoreTimer;
     Sun *light1;
     GameHud *Hud;
-    QGraphicsTextItem *sunPointsText;
     QString playerName;
     QString playerLevel;
+    int mouseState;
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void addPlant(QMouseEvent *event);
+    QGraphicsPixmapItem *peashooterCard;
+    QGraphicsPixmapItem *sunflowerCard;
+    QGraphicsPixmapItem *cherrybombCard;
+    QGraphicsPixmapItem *walnutCard;
+    QGraphicsPixmapItem *repeaterCard;
+    QGraphicsPixmapItem *chomperCard;
+    QGraphicsPixmapItem *snowpeashooterCard;
+    QGraphicsPixmapItem *potatomineCard;
+
 
 signals:
     void showMainWindow();
