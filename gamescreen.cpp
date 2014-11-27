@@ -2,7 +2,8 @@
 #include <QDebug>
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent), playerName("Guest"), playerLevel("1"), mouseState(0)
+    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
+    mouseState(0)
 {
     sunPoints = 100; //Intializes sunpoints for session
 
@@ -22,7 +23,7 @@ GameScreen::GameScreen(QWidget *parent) :
     QPixmap background(":/Images/pvzBackground");
     scene->addPixmap(background);
 
-    //Creates a custom cursor
+    //Sets a custom cursor
     mouseCursor = new QCursor(QPixmap(":/Images/mainCursor"),0,0);
     this->setCursor(*mouseCursor);
 
@@ -80,21 +81,32 @@ GameScreen::GameScreen(QWidget *parent) :
     //Spawns new sun every 10 seconds
     sunSpawnTimer = new QTimer(this);
     connect(sunSpawnTimer,SIGNAL(timeout()),this,SLOT(spawnSun()));
-    sunSpawnTimer->start(10000);
+    sunSpawnTimer->start(sunSpawnInterval);
 
-
-    QPoint initial(240,245);
+    //Lawn plot properties
+    const int lawn_x = 240;
+    const int lawn_y = 245;
+    //QPoint initial(240,245); //location of where row 1 and column 1 plot is
+    const int lawn_plot_width = 80; //width of each plot
+    const int lawn_plot_height = 96; //height of each plot
+    lawnVector.resize(5);
 
     for(int i = 0; i < 5; i++)
     {
+        lawnVector.at(i).resize(9);
+
         for(int j = 0; j < 9; j++)
         {
-            QRect rect(initial.x(),initial.y(),80,96);
-            scene->addRect(rect,QPen(Qt::black),QBrush(Qt::NoBrush));
-            initial.setX(initial.x()+80);
+            //Sets the top and bottom cordinates for each plot
+            lawnPiece temp;
+            temp.topX = lawn_x + j*lawn_plot_width;
+            temp.topY = lawn_y + i*lawn_plot_height;
+            temp.botX = temp.topX + lawn_plot_width;
+            temp.botY = temp.topY + lawn_plot_height;
+            temp.isPlantable = true;
+
+            lawnVector[i][j] = temp;
         }
-        initial.setX(240);
-        initial.setY(initial.y()+96);
     }
 }
 
@@ -114,27 +126,36 @@ void GameScreen::setPlayerInfo(QString name, QString level)
 
 void GameScreen::closeEvent(QCloseEvent *event)
 {
+    timer->stop(); // pauses the scene's advance calls
+    int remember_sun_spawn_timer = sunSpawnTimer->remainingTime();
+    sunSpawnTimer->stop(); //Stops new suns from spawning
+    Sun::isPaused = true;
+    scene->advance();
+
     //Asks user if they want to exit the whole program or just game window
     QMessageBox::StandardButton answer;
     QMessageBox exit_message;
-    answer = exit_message.question(this, tr("Exit Location"), tr("Would you like to exit to the main menu?"),
-                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+    answer = exit_message.question(this, tr("Exit"), tr("Are you sure you want to leave this level?"),
+                                   QMessageBox::Yes|QMessageBox::Cancel);
 
     if(answer == QMessageBox::Yes)
     {
-        //Sends signal to mainwindow to unhide
+        deleteGameWindow(); //Signals to delete gamewindow
         event->accept(); //closes game window
-        showMainWindow();
-        deleteGameWindow();
-    }
-    else if(answer == QMessageBox::No)
-    {
-        //Does not unhide the mainwindow which automatically calls the mainwindow destructor
-        event->accept(); //closes game window
-        deleteGameWindow();
+        showMainWindow(); //signals to display main window
+
     }
     else if(answer == QMessageBox::Cancel)
+    {
         event->ignore(); //resumes game
+
+        Sun::isPaused = false;
+        timer->start(20);
+
+        //Sun spawn timer interval is the remaining time from pause
+        sunSpawnTimer->start(remember_sun_spawn_timer);
+        qDebug() << sunSpawnTimer->interval();
+    }
 }
 
 void GameScreen::mousePressEvent(QMouseEvent *e)
@@ -211,7 +232,7 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
 
     //Checks if user clicked to plant
     if(mouseState != 0)
-        addPlant( e);
+        addPlant(e);
 }
 
 void GameScreen::mouseMoveEvent(QMouseEvent *e)
@@ -221,11 +242,92 @@ void GameScreen::mouseMoveEvent(QMouseEvent *e)
 
 void GameScreen::addPlant(QMouseEvent *event)
 {
+    //Temporary variables to make conditional statements shorter
+    int m_x = event->x();
+    int m_y = event->y();
 
+    for(int i = 0; i < (int)lawnVector.size(); i++)
+    {
+        for(int j = 0; j < (int)lawnVector.at(i).size(); j++)
+        {
+            lawnPiece *temp = &lawnVector[i][j];
+            
+            if(((m_x >= temp->topX && m_x <= temp->botX) &&
+               (m_y >= temp->topY && m_y <= temp->botY)) &&
+                temp->isPlantable)
+            {
+                if(mouseState == 1)
+                {
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-100);
+
+                    QGraphicsPixmapItem *peashooter = new QGraphicsPixmapItem(QPixmap(":/Images/peashooter"));
+                    peashooter->setPos(temp->topX + 5,temp->topY + 5) ;
+                    scene->addItem(peashooter);
+                }
+                else if(mouseState == 2)
+                {
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-50);
+
+                    QGraphicsPixmapItem *sunflower = new QGraphicsPixmapItem(QPixmap(":/Images/sunflower"));
+                    sunflower->setPos(temp->topX + 5,temp->topY + 5) ;
+                    scene->addItem(sunflower);
+                }
+                else if(mouseState == 3)
+                {
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-50);
+
+                    QGraphicsPixmapItem *walnut = new QGraphicsPixmapItem(QPixmap(":/Images/walnut"));
+                    walnut->setPos(temp->topX + 5,temp->topY + 5) ;
+                    scene->addItem(walnut);
+                }
+                else if(mouseState == 4)
+                {
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-150);
+
+                    QGraphicsPixmapItem *cherrybomb = new QGraphicsPixmapItem(QPixmap(":/Images/cherrybomb"));
+                    cherrybomb->setPos(temp->topX + 5,temp->topY + 5) ;
+                    scene->addItem(cherrybomb);
+                }
+
+                //Returns the mouse to default state and cursor
+                mouseState = 0;
+                setDefaultCursor();
+
+                //Reset the opacities to indicate no active selected plant
+                peashooterCard->setOpacity(1);
+                sunflowerCard->setOpacity(1);
+                walnutCard->setOpacity(1);
+                cherrybombCard->setOpacity(1);
+            }
+        }
+    }
+}
+
+void GameScreen::setDefaultCursor()
+{
+    //Sets a default custom cursor
+    delete mouseCursor;
+    mouseCursor = new QCursor(QPixmap(":/Images/mainCursor"),0,0);
+    this->setCursor(*mouseCursor);
 }
 
 void GameScreen::spawnSun()
 {
+    /*Accounting for a interval that isn't the desired spawn rate
+      this when the game is paused the interval is the remaining time
+      from last countdown*/
+    if(sunSpawnTimer->interval() != sunSpawnInterval)
+    {
+        //Restarts the timer with default sunSpawnInterval
+        sunSpawnTimer->stop();
+        sunSpawnTimer->start(sunSpawnInterval);
+    }
+
+    //Spawns a new type 1 sun
     light1 = new Sun;
     scene->addItem(light1);
 }

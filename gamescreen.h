@@ -21,7 +21,7 @@ public:
 private:
     struct lawnPiece{
         bool isPlantable;
-        int x, y, width, height;
+        int topX, topY, botX, botY;
     };
 
 private:
@@ -30,9 +30,11 @@ private:
     void displaySunPoints() const;
     QGraphicsScene *scene;
     QCursor *mouseCursor;
-    std::vector<lawnPiece> lawnVector;
+    std::vector< std::vector<lawnPiece> > lawnVector;
     QTimer *timer;
     QTimer *sunSpawnTimer;
+    const int sunSpawnInterval;
+    QTimer *destroySunTimer;
     QTimer *scoreTimer;
     Sun *light1;
     GameHud *Hud;
@@ -42,6 +44,7 @@ private:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void addPlant(QMouseEvent *event);
+    void setDefaultCursor();
     QGraphicsPixmapItem *peashooterCard;
     QGraphicsPixmapItem *sunflowerCard;
     QGraphicsPixmapItem *cherrybombCard;

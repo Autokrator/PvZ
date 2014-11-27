@@ -3,6 +3,7 @@
 #include <QDebug>
 
 int Sun::sunPoints = 1500; //Starting sunPoints
+bool Sun::isPaused = false; //Starting state
 
 Sun::Sun() : timeout(7500)
 {
@@ -32,8 +33,9 @@ Sun::Sun() : timeout(7500)
     //Type 1: falls from sky
     type = 1;
 
-    //Setting up counter
+    //Setting up counter and initialising rememberCounterTime
     counter = new QTime;
+    rememberCounterTime = 0;
 }
 
 Sun::Sun(QGraphicsItem *parent) : timeout(7500)
@@ -65,8 +67,9 @@ Sun::Sun(QGraphicsItem *parent) : timeout(7500)
     //Type 2: produced by a plant
     type = 2;
 
-    //Setting up counter
+    //Setting up counter and rememberCounterTime
     counter = new QTime;
+    rememberCounterTime = 0;
 }
 
 Sun::~Sun()
@@ -149,10 +152,11 @@ void Sun::move(double time)
     }
     else if(counter->isNull())
     {
-        //Starts counter if
+        //Starts counter
         counter->start();
     }
-    else if(counter->elapsed() > timeout)
+    //Adjusts the timeout to account for pauses so time elasped isn't recounted
+    else if(counter->elapsed() > timeout - rememberCounterTime)
     {
         //Deletes object after counter is greater than specified timeout
         delete this;
@@ -161,14 +165,36 @@ void Sun::move(double time)
 
 void Sun::advance(int phase)
 {
-    if(phase == 0)
+    if(phase == 0) return;
+
+    if(!isPaused)
     {
-        return;
+        //Moves the object according to velocity
+        this->move(1);
+        this->setPos(position); //updates position of GraphicsItem
+    }
+    else
+    {
+        //In case of pause
+        pause();
     }
 
-    //Moves the object according to velocity
-    this->move(1);
-    this->setPos(position); //updates position of GraphicsItem
+}
+
+void Sun::pause()
+{
+    if(counter->isNull())
+        return; // Does nothing if counter has not started yet
+    else
+    {
+        //Remembers the time elapsed by the pervious counter(s)
+        rememberCounterTime += counter->elapsed();
+        qDebug() << rememberCounterTime;
+
+        //Creates a new counter and deletes old one
+        delete counter;
+        counter = new QTime;
+    }
 }
 
 void Sun::updateSunPoints(int change)

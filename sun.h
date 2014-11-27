@@ -11,7 +11,9 @@ public:
     Sun(QGraphicsItem *parent);
     ~Sun();
     static int getSunPoints();
+    static bool isPaused;
     static void setSunPoints(int value);
+    static void updateSunPoints(int change);
 
 private:
     static int sunPoints; //
@@ -25,13 +27,14 @@ private:
     int type;
     QTime *counter;
     const int timeout;
+    int rememberCounterTime;
     void paint(QPainter*,const QStyleOptionGraphicsItem*, QWidget*);
     QRectF boundingRect() const;
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     double random(double, double) const;
     void move(double time);
     void advance(int phase);
-    void updateSunPoints(int);
+    void pause();
 };
 
 #endif // SUN_H
