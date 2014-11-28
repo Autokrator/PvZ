@@ -10,6 +10,7 @@
 #include "gamehud.h"
 #include <vector>
 #include <QTimer>
+#include "peashooter.h"
 
 class GameScreen : public QGraphicsView
 {
@@ -57,6 +58,7 @@ private:
     QGraphicsPixmapItem *chomperCard;
     QGraphicsPixmapItem *snowpeashooterCard;
     QGraphicsPixmapItem *potatomineCard;
+
 
 
 signals:

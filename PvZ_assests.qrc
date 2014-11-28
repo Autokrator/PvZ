@@ -19,6 +19,8 @@
         <file alias="walnut">RvZ_assests/Walnut.png</file>
         <file alias="cherrybombGray">RvZ_assests/cherryBomb_gray.png</file>
         <file alias="cherrybomb">RvZ_assests/cherryBomb.png</file>
+        <file alias="projectilePea">RvZ_assests/ProjectilePea.png</file>
+        <file alias="projectileSnowPea">RvZ_assests/ProjectileSnowPea.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

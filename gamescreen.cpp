@@ -256,12 +256,17 @@ void GameScreen::addPlant(QMouseEvent *event)
             {
                 if(mouseState == 1)
                 {
+                    QRect temp_rect;
+                    temp_rect.setX(temp->topX);
+                    temp_rect.setY(temp->topY);
+                    temp_rect.setWidth(scene->width()-temp->topX);
+                    temp_rect.setHeight(temp->botY - temp->topY);
+
+                    Peashooter *peashooter = new Peashooter(&temp_rect);
+                    scene->addItem(peashooter);
+
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-100);
-
-                    QGraphicsPixmapItem *peashooter = new QGraphicsPixmapItem(QPixmap(":/Images/peashooter"));
-                    peashooter->setPos(temp->topX + 5,temp->topY + 5) ;
-                    scene->addItem(peashooter);
                 }
                 else if(mouseState == 2)
                 {

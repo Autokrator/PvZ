@@ -18,14 +18,20 @@ SOURCES += main.cpp\
     existinguserdialog.cpp \
     gamescreen.cpp \
     sun.cpp \
-    gamehud.cpp
+    gamehud.cpp \
+    plant.cpp \
+    peashooter.cpp \
+    bullet.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
     existinguserdialog.h \
     gamescreen.h \
     sun.h \
-    gamehud.h
+    gamehud.h \
+    plant.h \
+    peashooter.h \
+    bullet.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \
