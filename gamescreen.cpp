@@ -2,8 +2,7 @@
 #include <QDebug>
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
-    mouseState(0)
+    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1")
 {
     //Makes a graphics view of following size
     this->setFixedHeight(760);
@@ -24,48 +23,6 @@ GameScreen::GameScreen(QWidget *parent) :
     //Sets a custom cursor
     mouseCursor = new QCursor(QPixmap(":/Images/mainCursor"),0,0);
     this->setCursor(*mouseCursor);
-
-    //Creates background for updating hud elements
-    QPixmap score_Background_note(":/Images/scoreBackgroundNote");
-    QPixmap score_Background(":/Images/scoreBackground");
-    scene->addPixmap(score_Background_note);
-    scene->addPixmap(score_Background)->setPos(score_Background.width(),0);
-    scene->addPixmap(score_Background)->setPos(score_Background.width()*2,0);
-
-    /*Adding clickable plant icons*/
-
-    //Aligning to y-point
-    int y_alignment = 50;
-
-    //Loading pixmap of each card
-    peashooterCard = new QGraphicsPixmapItem(QPixmap(":/Images/peashooterCard"));
-    sunflowerCard = new QGraphicsPixmapItem(QPixmap(":/Images/sunflowerCard"));
-    walnutCard = new QGraphicsPixmapItem(QPixmap(":/Images/walnutCard"));
-    cherrybombCard = new QGraphicsPixmapItem(QPixmap(":/Images/cherrybombCard"));
-
-    //Setting their positions, making them selectable and adding them to the scene
-    //peashooter
-    peashooterCard->setPos(score_Background.width()+40,y_alignment);
-    peashooterCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    scene->addItem(peashooterCard);
-
-    //sunflower Card
-    sunflowerCard->setPos(peashooterCard->x()+50,y_alignment);
-    sunflowerCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    scene->addItem(sunflowerCard);
-
-    //walnut Card
-    walnutCard->setPos(sunflowerCard->x()+50,y_alignment);
-    walnutCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    scene->addItem(walnutCard);
-
-    //cherrybomb Card
-    cherrybombCard->setPos(walnutCard->x()+50,y_alignment);
-    cherrybombCard->setFlag(QGraphicsItem::ItemIsSelectable);
-    scene->addItem(cherrybombCard);
-
-
-    /*End of adding selectable cards to scene*/
 
     //Adds dynamic hud elements
     Hud = new GameHud;
@@ -165,76 +122,8 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
 {
     QGraphicsView::mousePressEvent(e);
 
-    //Checks to see which card(if any) is selected when mouse is pressed
-    if(peashooterCard->isSelected() && Sun::getSunPoints() >= 100)
-    {
-        mouseState = 1; //Gives permission to plant peashooter
-
-        //Changes mouse cursor to reflect clicked plant
-        delete mouseCursor;
-        mouseCursor = new QCursor(QPixmap(":/Images/peashooterGray"));
-        this->setCursor(*mouseCursor);
-
-        //Decreases opacity of other cards to indicate selected one is active
-        peashooterCard->setOpacity(1);
-        sunflowerCard->setOpacity(0.5);
-        walnutCard->setOpacity(0.5);
-        cherrybombCard->setOpacity(0.5);
-
-        //Resets selection
-        peashooterCard->setSelected(false);
-    }
-    else if(sunflowerCard->isSelected() && Sun::getSunPoints() >= 50)
-    {
-        mouseState = 2; //Gives permission to plant sunflower
-
-        //Changes mouse cursor to reflect clicked plant
-        delete mouseCursor;
-        mouseCursor = new QCursor(QPixmap(":/Images/sunflowerGray"));
-        this->setCursor(*mouseCursor);
-
-        //Decreases opacity of other cards to indicate selected one is active
-        sunflowerCard->setOpacity(1);
-        peashooterCard->setOpacity(0.5);
-        walnutCard->setOpacity(0.5);
-        cherrybombCard->setOpacity(0.5);
-
-        //Resets selection
-        sunflowerCard->setSelected(false);
-    }
-    else if(walnutCard->isSelected() && Sun::getSunPoints() >= 50)
-    {
-        mouseState = 3; //Gives permission to plant walnut
-
-        //Changes mouse cursor to reflect clicked plant
-        delete mouseCursor;
-        mouseCursor = new QCursor(QPixmap(":/Images/walnutGray"));
-        this->setCursor(*mouseCursor);
-
-        //Decreases opacity of other cards to indicate selected one is active
-        walnutCard->setOpacity(1);
-        peashooterCard->setOpacity(0.5);
-        sunflowerCard->setOpacity(0.5);
-        cherrybombCard->setOpacity(0.5);
-    }
-    else if(cherrybombCard->isSelected() && Sun::getSunPoints() >= 150)
-    {
-        mouseState = 4; //Gives permission to plant cherrybomb
-
-        //Changes mouse cursor to reflect clicked plant
-        delete mouseCursor;
-        mouseCursor = new QCursor(QPixmap(":/Images/cherrybombGray"));
-        this->setCursor(*mouseCursor);
-
-        //Decreases opacity of other cards to indicate selected one is active
-        cherrybombCard->setOpacity(1);
-        peashooterCard->setOpacity(0.5);
-        sunflowerCard->setOpacity(0.5);
-        walnutCard->setOpacity(0.5);
-    }
-
     //Checks if user clicked to plant
-    if(mouseState != 0)
+    if(GameHud::mouseState != 0)
         addPlant(e);
 }
 
@@ -254,7 +143,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                (m_y >= temp->topY && m_y <= temp->botY)) &&
                 temp->isPlantable)
             {
-                if(mouseState == 1)
+                if(GameHud::mouseState == 1)
                 {
                     QRect temp_rect;
                     temp_rect.setX(temp->topX);
@@ -268,7 +157,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-100);
                 }
-                else if(mouseState == 2)
+                else if(GameHud::mouseState == 2)
                 {
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-50);
@@ -277,7 +166,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     sunflower->setPos(temp->topX + 5,temp->topY + 5) ;
                     scene->addItem(sunflower);
                 }
-                else if(mouseState == 3)
+                else if(GameHud::mouseState == 3)
                 {
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-50);
@@ -286,7 +175,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     walnut->setPos(temp->topX + 5,temp->topY + 5) ;
                     scene->addItem(walnut);
                 }
-                else if(mouseState == 4)
+                else if(GameHud::mouseState == 4)
                 {
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-150);
@@ -297,14 +186,8 @@ void GameScreen::addPlant(QMouseEvent *event)
                 }
 
                 //Returns the mouse to default state and cursor
-                mouseState = 0;
+                GameHud::mouseState = 0;
                 setDefaultCursor();
-
-                //Reset the opacities to indicate no active selected plant
-                peashooterCard->setOpacity(1);
-                sunflowerCard->setOpacity(1);
-                walnutCard->setOpacity(1);
-                cherrybombCard->setOpacity(1);
             }
         }
     }
