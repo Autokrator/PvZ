@@ -5,8 +5,6 @@ GameScreen::GameScreen(QWidget *parent) :
     QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
     mouseState(0)
 {
-    sunPoints = 100; //Intializes sunpoints for session
-
     //Makes a graphics view of following size
     this->setFixedHeight(760);
     this->setFixedWidth(1032);
@@ -119,9 +117,11 @@ GameScreen::~GameScreen()
 
 void GameScreen::setPlayerInfo(QString name, QString level)
 {
-    //Sets player in for gamescreen instance
+    //Sets player in for gamescreen and hud instance
     Hud->user = name;
     Hud->level = level;
+    playerName = name;
+    playerLevel = level;
 }
 
 void GameScreen::closeEvent(QCloseEvent *event)
@@ -129,32 +129,35 @@ void GameScreen::closeEvent(QCloseEvent *event)
     timer->stop(); // pauses the scene's advance calls
     int remember_sun_spawn_timer = sunSpawnTimer->remainingTime();
     sunSpawnTimer->stop(); //Stops new suns from spawning
-    Sun::isPaused = true;
-    scene->advance();
 
-    //Asks user if they want to exit the whole program or just game window
-    QMessageBox::StandardButton answer;
+    Sun::isPaused = true; //Changes state for all suns in the scene
+    scene->advance();   //Advances to allow suns to activate Sun::pause() func
+
+    //Asks user if they want to exit the level
     QMessageBox exit_message;
-    answer = exit_message.question(this, tr("Exit"), tr("Are you sure you want to leave this level?"),
-                                   QMessageBox::Yes|QMessageBox::Cancel);
 
-    if(answer == QMessageBox::Yes)
+    int message_width = lawnVector[1][8].botX - lawnVector[1][0].topX;
+    int message_height = lawnVector[3][0].botY - lawnVector[1][0].topY;
+    exit_message.setFixedSize(message_width,message_height);
+    exit_message.setText(tr("Are you sure you want to leave this level?"));
+    exit_message.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+
+    if(exit_message.exec() == exit_message.Ok) //If yes is selected
     {
         deleteGameWindow(); //Signals to delete gamewindow
         event->accept(); //closes game window
         showMainWindow(); //signals to display main window
 
     }
-    else if(answer == QMessageBox::Cancel)
+    else //If cancel is selected or window is closed
     {
         event->ignore(); //resumes game
 
-        Sun::isPaused = false;
-        timer->start(20);
+        Sun::isPaused = false; //Changes back the state for all suns in the scene
+        timer->start(20); //reactivates the advance and timeout() connection
 
         //Sun spawn timer interval is the remaining time from pause
         sunSpawnTimer->start(remember_sun_spawn_timer);
-        qDebug() << sunSpawnTimer->interval();
     }
 }
 
@@ -233,11 +236,6 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
     //Checks if user clicked to plant
     if(mouseState != 0)
         addPlant(e);
-}
-
-void GameScreen::mouseMoveEvent(QMouseEvent *e)
-{
-    QGraphicsView::mouseMoveEvent(e);
 }
 
 void GameScreen::addPlant(QMouseEvent *event)
@@ -328,7 +326,7 @@ void GameScreen::spawnSun()
     }
 
     //Spawns a new type 1 sun
-    light1 = new Sun;
-    scene->addItem(light1);
+    sun = new Sun;
+    scene->addItem(sun);
 }
 

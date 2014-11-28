@@ -76,17 +76,11 @@ Sun::~Sun()
 {
     delete sunImage;
     delete counter;
-    qDebug() << "deleted";
 }
 
 int Sun::getSunPoints()
 {
     return sunPoints;
-}
-
-void Sun::setSunPoints(int value)
-{
-    sunPoints = value;
 }
 
 void Sun::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -201,7 +195,6 @@ void Sun::updateSunPoints(int change)
 {
     //Increments/Decrements sunPoints
     sunPoints += change;
-    qDebug() << sunPoints;
 }
 
 double Sun::random(double x1, double x2) const
