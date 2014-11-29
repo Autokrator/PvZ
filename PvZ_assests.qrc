@@ -30,6 +30,7 @@
         <file alias="repeaterCard">RvZ_assests/repeater_card.png</file>
         <file alias="repeaterGray">RvZ_assests/repeater_gray.png</file>
         <file alias="repeater">RvZ_assests/repeater.png</file>
+        <file alias="regularZombie">RvZ_assests/regularzombie.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

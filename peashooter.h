@@ -14,6 +14,7 @@ private:
     QTime *fireCounter;
     Bullet *bullet;
     bool slowEffect;
+    QGraphicsLineItem *collisionLine;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);

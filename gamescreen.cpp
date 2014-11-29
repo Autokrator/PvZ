@@ -115,15 +115,19 @@ GameScreen::GameScreen(QWidget *parent) :
         {
             //Sets the top and bottom cordinates for each plot
             lawnPiece temp;
-            temp.topX = lawn_x + j*lawn_plot_width;
-            temp.topY = lawn_y + i*lawn_plot_height;
-            temp.botX = temp.topX + lawn_plot_width;
-            temp.botY = temp.topY + lawn_plot_height;
+            temp.topX = lawn_x + (j*lawn_plot_width);
+            temp.topY = lawn_y + (i*lawn_plot_height-1);
+            temp.botX = (temp.topX-1) + lawn_plot_width;
+            temp.botY = (temp.topY-1) + lawn_plot_height;
             temp.isPlantable = true;
 
             lawnVector[i][j] = temp;
         }
     }
+
+    QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,720,96);
+    RegularZombie *zombie = new RegularZombie(&temp_rect);
+    scene->addItem(zombie);
 }
 
 GameScreen::~GameScreen()

@@ -8,6 +8,7 @@
 #include <vector>
 #include <QTimer>
 #include "peashooter.h"
+#include "regularzombie.h"
 
 class GameScreen : public QGraphicsView
 {
