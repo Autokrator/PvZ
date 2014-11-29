@@ -21,6 +21,15 @@
         <file alias="cherrybomb">RvZ_assests/cherryBomb.png</file>
         <file alias="projectilePea">RvZ_assests/ProjectilePea.png</file>
         <file alias="projectileSnowPea">RvZ_assests/ProjectileSnowPea.png</file>
+        <file alias="chomperCard">RvZ_assests/chomper_card.png</file>
+        <file alias="chomperGray">RvZ_assests/chomper_gray.png</file>
+        <file alias="chomper">RvZ_assests/chomper.png</file>
+        <file alias="snowpeaCard">RvZ_assests/snowPea_card.png</file>
+        <file alias="snowpeaGray">RvZ_assests/snowPea_gray.png</file>
+        <file alias="snowpea">RvZ_assests/snowPea.png</file>
+        <file alias="repeaterCard">RvZ_assests/repeater_card.png</file>
+        <file alias="repeaterGray">RvZ_assests/repeater_gray.png</file>
+        <file alias="repeater">RvZ_assests/repeater.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

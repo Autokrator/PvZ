@@ -39,11 +39,22 @@ private:
     QString playerName; //Holds the current player information
     QString playerLevel; //Holds the current level information
     QCursor *mouseCursor; //Used to change cursor throughout various game scenarios
-
+    int mouseState; /*Used to indicate plant selection
+                                 0 = default, 1 = peashooter, 2 = sunflower... 8*/
     void closeEvent(QCloseEvent *event); //Custom function for when window is closed (Quit button)
     void mousePressEvent(QMouseEvent *e); //Custom function for mouse click events
     void addPlant(QMouseEvent *event); //Takes care of planting on the lawn
     void setDefaultCursor(); //Sets the mouse to a default cursor
+
+    //Plant selection cards used to know which plant is selected or can be selected
+    QGraphicsPixmapItem *peashooterCard;
+    QGraphicsPixmapItem *sunflowerCard;
+    QGraphicsPixmapItem *cherrybombCard;
+    QGraphicsPixmapItem *walnutCard;
+    QGraphicsPixmapItem *repeaterCard;
+    QGraphicsPixmapItem *chomperCard;
+    QGraphicsPixmapItem *snowpeashooterCard;
+    QGraphicsPixmapItem *potatomineCard;
 
 signals:
     void showMainWindow(); //Signals to show mainwindow (menu)

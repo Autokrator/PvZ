@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     gamehud.cpp \
     plant.cpp \
     peashooter.cpp \
-    bullet.cpp
+    bullet.cpp \
+    zombie.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     gamehud.h \
     plant.h \
     peashooter.h \
-    bullet.h
+    bullet.h \
+    zombie.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \
