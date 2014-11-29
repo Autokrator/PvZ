@@ -6,6 +6,7 @@ Bullet::Bullet(bool slow, Plant *parent)
     this->setPos(parent->x()+parent->boundingRect().width()/2,parent->y());
     xVelocity = 3;
     bulletDamage = parent->getDamage();
+    triggerSlow = slow;
 
     if(slow)
     {
@@ -20,7 +21,6 @@ Bullet::Bullet(bool slow, Plant *parent)
 Bullet::~Bullet()
 {
     delete bulletImage;
-    qDebug() << "deleted image";
 }
 
 QRectF Bullet::boundingRect() const
@@ -47,7 +47,13 @@ void Bullet::advance(int phase)
         Zombie * item = dynamic_cast<Zombie *>(collision_list.at(i));
         if (item)
         {
+            //Decreases life of zombie
             item->decreaseLife(bulletDamage);
+
+            //Slows if zombie isnt already slowed
+            if(!item->getSlowStatus() && triggerSlow)
+                item->setSlowEffect();
+
             delete this;
             return;
         }

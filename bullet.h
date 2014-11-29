@@ -15,6 +15,7 @@ private:
     QPixmap *bulletImage;
     double xVelocity;
     int bulletDamage;
+    bool triggerSlow;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);

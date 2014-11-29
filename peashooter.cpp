@@ -4,17 +4,20 @@
 
 Peashooter::Peashooter(QRect *plant_row)
 {
-    life = 4;
+    //peashooter properties
+    life = 10;
     cost = 100;
-    damage = 1;
+    plantDamage = 1;
     fireRate = 1500;
-    slowEffect = false;
+    slowEffect = true;
 
+    //setting the position of peashooter based on planting row
     this->setPos(plant_row->x(),plant_row->y());
 
     activeRow = *plant_row;
     peashooterImage = new QPixmap(":/Images/peashooter");
     fireCounter = new QTime;
+    fireCounter->start();
 
     /*Creates 2 points, one at the start of the plot where the peashooter is planted and
      one at the end of the scene; two createa straight line through the active row which
@@ -53,8 +56,6 @@ void Peashooter::advance(int phase)
 {
     if(!phase) return;
 
-    if(fireCounter->isNull())
-        fireCounter->start();
     if(fireCounter->elapsed() >= fireRate)
     {
         fireBullet();

@@ -13,5 +13,10 @@ void Plant::decreaseHealth(int value)
 
 int Plant::getDamage() const
 {
-    return damage;
+    return plantDamage;
+}
+
+int Plant::getPlantLife() const
+{
+    return life;
 }

@@ -16,3 +16,19 @@ void Zombie::decreaseLife(int value)
         equipmentLife = 0;
     }
 }
+
+void Zombie::setSlowEffect()
+{
+    this->isSlowed = true;
+    xVelocity *= 0.5;
+}
+
+bool Zombie::getSlowStatus() const
+{
+    return isSlowed;
+}
+
+void Zombie::attack(Plant *item)
+{
+    item->decreaseHealth(damage);
+}

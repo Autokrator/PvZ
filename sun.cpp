@@ -106,13 +106,14 @@ QRectF Sun::boundingRect() const
 
 void Sun::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    QGraphicsItem::mousePressEvent(event);
+
     //Changes the state and calls paint to update object
     isClicked = true;
     update();
 
     //Updates the number of sunpoints the user now has
     updateSunPoints(25);
-    QGraphicsItem::mousePressEvent(event);
 }
 
 void Sun::move(double time)

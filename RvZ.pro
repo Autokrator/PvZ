@@ -23,7 +23,10 @@ SOURCES += main.cpp\
     peashooter.cpp \
     bullet.cpp \
     zombie.cpp \
-    regularzombie.cpp
+    regularzombie.cpp \
+    sunflower.cpp \
+    walnut.cpp \
+    cherrybomb.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -35,7 +38,10 @@ HEADERS  += mainwindow.h \
     peashooter.h \
     bullet.h \
     zombie.h \
-    regularzombie.h
+    regularzombie.h \
+    sunflower.h \
+    walnut.h \
+    cherrybomb.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \

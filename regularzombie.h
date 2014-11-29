@@ -6,16 +6,16 @@ class RegularZombie : public Zombie
 {
 public:
     RegularZombie(QRect *spawnRow = 0);
+    ~RegularZombie();
 
 private:
     QPixmap *zombieImage;
     QRect activeRow;
+    QGraphicsRectItem *collisionRect;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);
     void move();
-    void attack(Plant *item);
-
 };
 
 #endif // REGULARZOMBIE_H

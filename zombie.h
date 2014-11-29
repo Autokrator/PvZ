@@ -12,6 +12,8 @@ class Zombie : public QGraphicsItem
 public:
     Zombie();
     void decreaseLife(int value);
+    void setSlowEffect();
+    bool getSlowStatus() const;
 
 protected:
     double xCordinate;
@@ -22,8 +24,8 @@ protected:
     int attackRate;
     double xVelocity;
     bool isSlowed;
-    QTime attackCounter;
-    virtual void attack(Plant*) = 0;
+    QTime *attackCounter;
+    void attack(Plant*item);
     virtual void move() = 0;
 };
 

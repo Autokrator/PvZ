@@ -335,15 +335,16 @@ void GameScreen::addPlant(QMouseEvent *event)
             if(((m_x >= temp->topX && m_x <= temp->botX) &&
                (m_y >= temp->topY && m_y <= temp->botY)) &&
                 temp->isPlantable)
-            {
-                if(mouseState == 1)
-                {
-                    QRect temp_rect;
-                    temp_rect.setX(temp->topX);
-                    temp_rect.setY(temp->topY);
-                    temp_rect.setWidth(scene->width()-temp->topX);
-                    temp_rect.setHeight(temp->botY - temp->topY);
+            {   
+                //Rect that holds information of the row it is planted on
+                QRect temp_rect;
+                temp_rect.setX(temp->topX);
+                temp_rect.setY(temp->topY);
+                temp_rect.setWidth(scene->width()-temp->topX);
+                temp_rect.setHeight(temp->botY - temp->topY);
 
+                if(mouseState == 1)
+                {   
                     Peashooter *peashooter = new Peashooter(&temp_rect);
                     scene->addItem(peashooter);
 
@@ -351,22 +352,20 @@ void GameScreen::addPlant(QMouseEvent *event)
                     Sun::updateSunPoints(-100);
                 }
                 else if(mouseState == 2)
-                {
+                {   
+                    Sunflower *sunflower = new Sunflower(&temp_rect);
+                    scene->addItem(sunflower);
+
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-50);
-
-                    QGraphicsPixmapItem *sunflower = new QGraphicsPixmapItem(QPixmap(":/Images/sunflower"));
-                    sunflower->setPos(temp->topX + 5,temp->topY + 5) ;
-                    scene->addItem(sunflower);
                 }
                 else if(mouseState == 3)
                 {
+                    Walnut *walnut = new Walnut(&temp_rect);
+                    scene->addItem(walnut);
+
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-50);
-
-                    QGraphicsPixmapItem *walnut = new QGraphicsPixmapItem(QPixmap(":/Images/walnut"));
-                    walnut->setPos(temp->topX + 5,temp->topY + 5) ;
-                    scene->addItem(walnut);
                 }
                 else if(mouseState == 4)
                 {
