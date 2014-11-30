@@ -6,7 +6,7 @@
 class Peashooter : public Plant
 {
 public:
-    Peashooter(QRect *plant_row = 0);
+    Peashooter(QRect *plant_row = 0, bool is_snowpea = false);
     ~Peashooter();
 private:
     QPixmap *peashooterImage;

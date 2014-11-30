@@ -5,7 +5,7 @@ RegularZombie::RegularZombie(QRect *spawnRow)
 {
     activeRow = *spawnRow;
 
-    xCordinate = 1100;
+    xCordinate = 500;
     yCordinate = spawnRow->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -13,10 +13,10 @@ RegularZombie::RegularZombie(QRect *spawnRow)
     zombieImage = new QPixmap(":/Images/regularZombie");
 
     equipmentLife = 0;
-    zombieLife = 10;
+    zombieLife = 100;
     damage = 1;
     attackRate = 500;
-    xVelocity = 1;
+    xVelocity = 0.1;
 
     attackCounter = new QTime;
 }
@@ -34,6 +34,7 @@ QRectF RegularZombie::boundingRect() const
 
 void RegularZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->drawRect(boundingRect());
     if(zombieLife > 0)
     {
         //Paints zombie pixmap representation to screen with boundingRect as source and target rect

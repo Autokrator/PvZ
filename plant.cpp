@@ -20,3 +20,8 @@ int Plant::getPlantLife() const
 {
     return life;
 }
+
+int Plant::getCost() const
+{
+    return cost;
+}

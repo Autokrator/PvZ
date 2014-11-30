@@ -10,6 +10,7 @@
 #include "peashooter.h"
 #include "sunflower.h"
 #include "walnut.h"
+#include "cherrybomb.h"
 #include "regularzombie.h"
 
 class GameScreen : public QGraphicsView

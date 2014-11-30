@@ -32,6 +32,7 @@
         <file alias="repeater">RvZ_assests/repeater.png</file>
         <file alias="regularZombie">RvZ_assests/regularzombie.png</file>
         <file alias="regularZombieSlowed">RvZ_assests/regularzombie_slowed.png</file>
+        <file alias="explosion">RvZ_assests/boom.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

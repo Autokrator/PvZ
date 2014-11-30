@@ -12,6 +12,7 @@ public:
     void decreaseHealth(int value);
     int getDamage() const;
     int getPlantLife() const;
+    int getCost() const;
 protected:
     int life;
     int cost;

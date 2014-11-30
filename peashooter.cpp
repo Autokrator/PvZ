@@ -2,20 +2,30 @@
 #include <QDebug>
 #include "zombie.h"
 
-Peashooter::Peashooter(QRect *plant_row)
+Peashooter::Peashooter(QRect *plant_row, bool is_snowpea)
 {
     //peashooter properties
     life = 10;
-    cost = 100;
     plantDamage = 1;
     fireRate = 1500;
-    slowEffect = true;
+    slowEffect = is_snowpea;
 
     //setting the position of peashooter based on planting row
     this->setPos(plant_row->x(),plant_row->y());
 
     activeRow = *plant_row;
-    peashooterImage = new QPixmap(":/Images/peashooter");
+
+    if(!is_snowpea)
+    {
+        peashooterImage = new QPixmap(":/Images/peashooter");
+        cost = 100;
+    }
+    else
+    {
+        peashooterImage = new QPixmap(":/Images/snowpea");
+        cost = 175;
+    }
+
     fireCounter = new QTime;
     fireCounter->start();
 

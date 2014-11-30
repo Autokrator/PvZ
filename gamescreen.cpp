@@ -125,9 +125,12 @@ GameScreen::GameScreen(QWidget *parent) :
         }
     }
 
-    QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,720,96);
-    RegularZombie *zombie = new RegularZombie(&temp_rect);
-    scene->addItem(zombie);
+    for(int i = 0; i < 5; i++)
+    {
+        QRect temp_rect(lawnVector[i][0].topX,lawnVector[i][0].topY,720,96);
+        RegularZombie *zombie = new RegularZombie(&temp_rect);
+        scene->addItem(zombie);
+    }
 }
 
 GameScreen::~GameScreen()
@@ -349,7 +352,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     scene->addItem(peashooter);
 
                     temp->isPlantable = false;
-                    Sun::updateSunPoints(-100);
+                    Sun::updateSunPoints(-peashooter->getCost());
                 }
                 else if(mouseState == 2)
                 {   
@@ -357,7 +360,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     scene->addItem(sunflower);
 
                     temp->isPlantable = false;
-                    Sun::updateSunPoints(-50);
+                    Sun::updateSunPoints(-sunflower->getCost());
                 }
                 else if(mouseState == 3)
                 {
@@ -365,16 +368,30 @@ void GameScreen::addPlant(QMouseEvent *event)
                     scene->addItem(walnut);
 
                     temp->isPlantable = false;
-                    Sun::updateSunPoints(-50);
+                    Sun::updateSunPoints(-walnut->getCost());
                 }
                 else if(mouseState == 4)
                 {
-                    temp->isPlantable = false;
-                    Sun::updateSunPoints(-150);
+                    QRect tile(temp->topX,temp->topY,
+                               temp->botX-temp->topX,
+                               temp->botY-temp->topY);
 
-                    QGraphicsPixmapItem *cherrybomb = new QGraphicsPixmapItem(QPixmap(":/Images/cherrybomb"));
-                    cherrybomb->setPos(temp->topX + 5,temp->topY + 5) ;
+                    Cherrybomb *cherrybomb = new Cherrybomb(&tile);
                     scene->addItem(cherrybomb);
+
+                    Sun::updateSunPoints(-cherrybomb->getCost());
+                }
+                else if(mouseState == 5)
+                {
+
+                }
+                else if(mouseState == 6)
+                {
+                    Peashooter *peashooter = new Peashooter(&temp_rect,true);
+                    scene->addItem(peashooter);
+
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-peashooter->getCost());
                 }
 
                 //Returns the mouse to default state and cursor
