@@ -134,7 +134,7 @@ GameScreen::GameScreen(QWidget *parent) :
     for(int i = 0; i < 3; i++)
     {
         QRect temp_rect(lawnVector[i%5][0].topX,lawnVector[i%5][0].topY,720,96);
-        RegularZombie *zombie = new RegularZombie(&temp_rect);
+        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_rect);
         scene->addItem(zombie);
     }
 }

@@ -37,6 +37,14 @@
         <file alias="potatomineCard">RvZ_assests/potatoMine_card.png</file>
         <file alias="potatomineGray">RvZ_assests/potatomine_gray.png</file>
         <file alias="potatomine">RvZ_assests/potatoMine.png</file>
+        <file alias="coneheadSlowed">RvZ_assests/conehead_zombie_slowed.png</file>
+        <file alias="conehead">RvZ_assests/conehead_zombie.png</file>
+        <file alias="flagzombieSlowed">RvZ_assests/flag_zombie_slowed.png</file>
+        <file alias="flagzombie">RvZ_assests/flag_zombie.png</file>
+        <file alias="newspaperzombieSlowed">RvZ_assests/Newspaper_Zombie_slowed.png</file>
+        <file alias="newspaperzombie">RvZ_assests/Newspaper_Zombie.png</file>
+        <file alias="bucketheadSlowed">RvZ_assests/zombie_buckethead_slowed.png</file>
+        <file alias="buckethead">RvZ_assests/zombie_buckethead.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

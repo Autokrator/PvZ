@@ -29,7 +29,11 @@ SOURCES += main.cpp\
     cherrybomb.cpp \
     chomper.cpp \
     repeater.cpp \
-    potatomine.cpp
+    potatomine.cpp \
+    coneheadzombie.cpp \
+    newspaperzombie.cpp \
+    bucketheadzombie.cpp \
+    flagzombie.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -47,7 +51,11 @@ HEADERS  += mainwindow.h \
     cherrybomb.h \
     chomper.h \
     repeater.h \
-    potatomine.h
+    potatomine.h \
+    coneheadzombie.h \
+    newspaperzombie.h \
+    bucketheadzombie.h \
+    flagzombie.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \

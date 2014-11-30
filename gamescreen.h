@@ -15,6 +15,10 @@
 #include "repeater.h"
 #include "potatomine.h"
 #include "regularzombie.h"
+#include "coneheadzombie.h"
+#include "newspaperzombie.h"
+#include "bucketheadzombie.h"
+#include "flagzombie.h"
 
 class GameScreen : public QGraphicsView
 {

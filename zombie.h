@@ -24,6 +24,8 @@ protected:
     int attackRate;
     double xVelocity;
     bool isSlowed;
+    QPixmap *zombieImage;
+    QGraphicsLineItem *collisionLine;
     QTime *attackCounter;
     void attack(Plant*item);
     virtual void move();

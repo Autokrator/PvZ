@@ -95,6 +95,7 @@ void Sun::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     {
         //deletes current object
         delete this;
+        return;
     }
 }
 
@@ -156,6 +157,7 @@ void Sun::move(double time)
     {
         //Deletes object after counter is greater than specified timeout
         delete this;
+        return;
     }
 }
 
