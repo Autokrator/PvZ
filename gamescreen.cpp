@@ -383,7 +383,13 @@ void GameScreen::addPlant(QMouseEvent *event)
                 }
                 else if(mouseState == 5)
                 {
+                    QRect tile(temp->topX,temp->topY,
+                               temp->botX-temp->topX,
+                               temp->botY-temp->topY);
 
+                    Chomper *chomper = new Chomper(&tile);
+                    scene->addItem(chomper);
+                    Sun::updateSunPoints(-chomper->getCost());
                 }
                 else if(mouseState == 6)
                 {

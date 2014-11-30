@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     regularzombie.cpp \
     sunflower.cpp \
     walnut.cpp \
-    cherrybomb.cpp
+    cherrybomb.cpp \
+    chomper.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     regularzombie.h \
     sunflower.h \
     walnut.h \
-    cherrybomb.h
+    cherrybomb.h \
+    chomper.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \

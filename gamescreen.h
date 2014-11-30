@@ -11,6 +11,7 @@
 #include "sunflower.h"
 #include "walnut.h"
 #include "cherrybomb.h"
+#include "chomper.h"
 #include "regularzombie.h"
 
 class GameScreen : public QGraphicsView
