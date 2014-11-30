@@ -32,3 +32,8 @@ void Zombie::attack(Plant *item)
 {
     item->decreaseHealth(damage);
 }
+
+void Zombie::move()
+{
+
+}

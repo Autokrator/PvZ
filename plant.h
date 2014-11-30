@@ -9,10 +9,12 @@ class Plant : public QGraphicsItem
 {
 public:
     Plant();
+    ~Plant();
     void decreaseHealth(int value);
     int getDamage() const;
     int getPlantLife() const;
     int getCost() const;
+    bool isTargetable;
 protected:
     int life;
     int cost;

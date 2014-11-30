@@ -1,11 +1,12 @@
 #include "regularzombie.h"
 #include <QDebug>
+#include "bullet.h"
 
 RegularZombie::RegularZombie(QRect *spawnRow)
 {
     activeRow = *spawnRow;
 
-    xCordinate = 500;
+    xCordinate = 700;
     yCordinate = spawnRow->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -13,12 +14,14 @@ RegularZombie::RegularZombie(QRect *spawnRow)
     zombieImage = new QPixmap(":/Images/regularZombie");
 
     equipmentLife = 0;
-    zombieLife = 100;
+    zombieLife = 10;
     damage = 1;
     attackRate = 500;
-    xVelocity = 0.1;
+    xVelocity = 0.25;
 
     attackCounter = new QTime;
+
+    collisionLine = new QGraphicsLineItem;
 }
 
 RegularZombie::~RegularZombie()
@@ -35,45 +38,44 @@ QRectF RegularZombie::boundingRect() const
 void RegularZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->drawRect(boundingRect());
-    if(zombieLife > 0)
-    {
-        //Paints zombie pixmap representation to screen with boundingRect as source and target rect
-        if(!isSlowed)
-            painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
-        else
-        {
-            //Deletes current zombie image
-            delete zombieImage;
-            zombieImage = NULL;
 
-            //Adjusted image if zombie is slowed
-            zombieImage = new QPixmap(":/Images/regularZombieSlowed");
-            painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
-        }
-    }
+    //Paints zombie pixmap representation to screen with boundingRect as source and target rect
+    if(!isSlowed)
+        painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
     else
-        delete this;
+    {
+        //Deletes current zombie image
+        delete zombieImage;
+
+        //Adjusted image if zombie is slowed
+        zombieImage = new QPixmap(":/Images/regularZombieSlowed");
+        painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
+    }
+
 }
 
 void RegularZombie::advance(int phase)
 {
     if(!phase) return;
 
+    if(zombieLife <= 0)
+    {
+        delete this;
+        return;
+    }
+
+    delete collisionLine;
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
 }
 
 void RegularZombie::move()
 {
-    collisionRect = new QGraphicsRectItem(this->x(),this->y()+zombieImage->height()/2,10,10);
-    collisionRect->setPen(QPen(Qt::transparent));
-    scene()->addItem(collisionRect);
+    int y_adj = 20;
+    collisionLine = new QGraphicsLineItem(xCordinate,yCordinate+y_adj,xCordinate+y_adj,yCordinate+y_adj);
 
     //Creates a list of items currently colliding with the mask
-    QList<QGraphicsItem *> collision_list = scene()->collidingItems(collisionRect);
-
-    delete collisionRect;
-    collisionRect = NULL;
+    QList<QGraphicsItem *> collision_list = scene()->collidingItems(collisionLine);
 
     //Checks for zombies colliding with mask and fires if there is atleast one zombie in row
     for(int i = 0; i < (int)collision_list.size();i++)
@@ -81,7 +83,7 @@ void RegularZombie::move()
         Plant * item = dynamic_cast<Plant *>(collision_list.at(i));
         if (item)
         {
-            if(item->getPlantLife() > 0)
+            if(item->isTargetable)
             {
                 if(attackCounter->isNull()) //Attacks and starts counter
                 {
@@ -94,11 +96,15 @@ void RegularZombie::move()
                     attackCounter->restart(); //restarts counter
                 }
             }
-            return; //exits without changing xCordinate
+            else if(!item->isTargetable)
+                xCordinate -= xVelocity;
+
+            return;
         }
     }
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+
 
 }

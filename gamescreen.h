@@ -12,6 +12,8 @@
 #include "walnut.h"
 #include "cherrybomb.h"
 #include "chomper.h"
+#include "repeater.h"
+#include "potatomine.h"
 #include "regularzombie.h"
 
 class GameScreen : public QGraphicsView
@@ -25,7 +27,7 @@ public:
 private:
     //Holds the basic properties for a lawn piece
     struct lawnPiece{
-        bool isPlantable;
+        bool isPlantable, containsPeashooter;
         int topX, topY, botX, botY;
     };
     //Holds the the 45 lawnpieces (struct) that make up the lawn
@@ -48,7 +50,7 @@ private:
                                  0 = default, 1 = peashooter, 2 = sunflower... 8*/
     void closeEvent(QCloseEvent *event); //Custom function for when window is closed (Quit button)
     void mousePressEvent(QMouseEvent *e); //Custom function for mouse click events
-    void addPlant(QMouseEvent *event); //Takes care of planting on the lawn
+    void addPlant(int m_x, int m_y); //Takes care of planting on the lawn
     void setDefaultCursor(); //Sets the mouse to a default cursor
 
     //Plant selection cards used to know which plant is selected or can be selected

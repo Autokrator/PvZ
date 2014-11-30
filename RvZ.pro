@@ -27,7 +27,9 @@ SOURCES += main.cpp\
     sunflower.cpp \
     walnut.cpp \
     cherrybomb.cpp \
-    chomper.cpp
+    chomper.cpp \
+    repeater.cpp \
+    potatomine.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -43,7 +45,9 @@ HEADERS  += mainwindow.h \
     sunflower.h \
     walnut.h \
     cherrybomb.h \
-    chomper.h
+    chomper.h \
+    repeater.h \
+    potatomine.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \

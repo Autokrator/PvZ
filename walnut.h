@@ -6,6 +6,7 @@ class Walnut : public Plant
 {
 public:
     Walnut(QRect *plant_row = 0);
+    ~Walnut();
 private:
     QPixmap *walnutImage;
     QRectF boundingRect() const;

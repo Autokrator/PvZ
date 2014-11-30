@@ -1,30 +1,20 @@
-#include "peashooter.h"
-#include <QDebug>
-#include "zombie.h"
+#include "repeater.h"
 
-Peashooter::Peashooter(QRect *plant_row, bool is_snowpea)
+Repeater::Repeater(QRect *plant_row)
 {
-    //peashooter properties
+    //repeater properties
     life = 10;
     plantDamage = 1;
     fireRate = 1500;
-    slowEffect = is_snowpea;
+    slowEffect = false;
+    cost = 200;
 
     //setting the position of peashooter based on planting row
     this->setPos(plant_row->x(),plant_row->y());
 
     activeRow = *plant_row;
 
-    if(!is_snowpea)
-    {
-        peashooterImage = new QPixmap(":/Images/peashooter");
-        cost = 100;
-    }
-    else
-    {
-        peashooterImage = new QPixmap(":/Images/snowpea");
-        cost = 175;
-    }
+    repeaterImage = new QPixmap(":/Images/repeater");
 
     fireCounter = new QTime;
     fireCounter->start();
@@ -35,31 +25,33 @@ Peashooter::Peashooter(QRect *plant_row, bool is_snowpea)
      colliding with this invisible line*/
 
     //Creates 2 points using active row rectangle and peashooter image size
-    QPoint p1(activeRow.x()+peashooterImage->width()/2,activeRow.y()+peashooterImage->height()/2);
-    QPoint p2(activeRow.width()+activeRow.x(),activeRow.y()+peashooterImage->height()/2);
+    QPoint p1(activeRow.x()+repeaterImage->width()/2,activeRow.y()+repeaterImage->height()/2);
+    QPoint p2(activeRow.width()+activeRow.x(),activeRow.y()+repeaterImage->height()/2);
 
     //Creates a collision mask(line) using the points
     collisionLine = new QGraphicsLineItem(p1.x(),p1.y(),p2.x(),p2.y());
 }
 
-Peashooter::~Peashooter()
+Repeater::~Repeater()
 {
-    delete peashooterImage;
+    delete repeaterImage;
     delete fireCounter;
     delete collisionLine;
 }
 
-QRectF Peashooter::boundingRect() const
+QRectF Repeater::boundingRect() const
 {
-    return QRectF(0,0,peashooterImage->width(),peashooterImage->height());
+    return QRect(0,0,repeaterImage->width(),repeaterImage->height());
 }
 
-void Peashooter::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void Repeater::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawPixmap(boundingRect(),*peashooterImage,boundingRect());
+
+    painter->drawPixmap(boundingRect(),*repeaterImage,boundingRect());
+
 }
 
-void Peashooter::advance(int phase)
+void Repeater::advance(int phase)
 {
     if(!phase) return;
 
@@ -72,12 +64,13 @@ void Peashooter::advance(int phase)
     if(fireCounter->elapsed() >= fireRate)
     {
         fireBullet();
+        fireBullet();
         fireCounter->restart();
     }
 }
 
-void Peashooter::fireBullet()
-{ 
+void Repeater::fireBullet()
+{
     //Creates a list of items currently colliding with the mask
     QList<QGraphicsItem *> collision_list = scene()->collidingItems(collisionLine);
 
@@ -93,4 +86,5 @@ void Peashooter::fireBullet()
             return;
         }
     }
+
 }

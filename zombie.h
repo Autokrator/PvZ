@@ -26,7 +26,7 @@ protected:
     bool isSlowed;
     QTime *attackCounter;
     void attack(Plant*item);
-    virtual void move() = 0;
+    virtual void move();
 };
 
 #endif // ZOMBIE_H

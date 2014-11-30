@@ -1,6 +1,7 @@
 #include "sun.h"
 #include <cmath>
 #include <QDebug>
+#include <QGraphicsScene>
 
 int Sun::sunPoints = 1500; //Starting sunPoints
 bool Sun::isPaused = false; //Starting state

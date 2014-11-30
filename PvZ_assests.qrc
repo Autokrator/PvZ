@@ -34,6 +34,9 @@
         <file alias="regularZombieSlowed">RvZ_assests/regularzombie_slowed.png</file>
         <file alias="explosion">RvZ_assests/boom.png</file>
         <file alias="chomperEating">RvZ_assests/chomper_eating.png</file>
+        <file alias="potatomineCard">RvZ_assests/potatoMine_card.png</file>
+        <file alias="potatomineGray">RvZ_assests/potatomine_gray.png</file>
+        <file alias="potatomine">RvZ_assests/potatoMine.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

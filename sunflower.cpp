@@ -22,7 +22,6 @@ Sunflower::~Sunflower()
 {
     delete sunflowerImage;
     delete makeSunCounter;
-    delete sun;
 }
 
 QRectF Sunflower::boundingRect() const
@@ -32,15 +31,19 @@ QRectF Sunflower::boundingRect() const
 
 void Sunflower::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    if(life > 0)
-        painter->drawPixmap(boundingRect(),*sunflowerImage,boundingRect());
-    else
-        delete this; //Deletes if health is lower than 0
+    painter->drawPixmap(boundingRect(),*sunflowerImage,boundingRect());
+
 }
 
 void Sunflower::advance(int phase)
 {
     if(!phase) return;
+
+    if(life <= 0)
+    {
+        delete this;
+        return;
+    }
 
     //Checks to see if counter has reached the set firerate
     if(makeSunCounter->elapsed() >= fireRate)

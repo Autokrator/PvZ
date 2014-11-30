@@ -11,7 +11,7 @@ Chomper::Chomper(QRect *lawn_tile)
     fireRate = 42000;
     isEating = false;
 
-    this->setPos(lawn_tile->x(),lawn_tile->y());
+    this->setPos(lawn_tile->x(),lawn_tile->y()+10);
 
     chomperImage  = new QPixmap(":/Images/chomper");
     chomperEatingImage = new QPixmap(":/Images/chomperEating");
@@ -43,20 +43,23 @@ QRectF Chomper::boundingRect() const
 
 void Chomper::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    if(life > 0)
-    {
-        if(!isEating)
-            painter->drawPixmap(boundingRect(),*chomperImage,boundingRect());
-        else
-            painter->drawPixmap(boundingRect(),*chomperEatingImage,boundingRect());
-    }
+    painter->drawRect(boundingRect());
+    if(!isEating)
+        painter->drawPixmap(boundingRect(),*chomperImage,boundingRect());
     else
-        delete this;
+        painter->drawPixmap(boundingRect(),*chomperEatingImage,boundingRect());
+
 }
 
 void Chomper::advance(int phase)
 {
     if(!phase) return;
+
+    if(life <= 0)
+    {
+        delete this;
+        return;
+    }
 
     if(resetTimer->elapsed() >= fireRate && !isEating)
     {

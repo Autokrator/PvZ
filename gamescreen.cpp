@@ -34,8 +34,9 @@ GameScreen::GameScreen(QWidget *parent) :
 
     /*Adding clickable plant icons*/
 
-    //Aligning to y-point
+    //Aligning to y-point and x-point
     int y_alignment = 50;
+    int x_adj = 50;
 
     //Loading pixmap of each card
     peashooterCard = new QGraphicsPixmapItem(QPixmap(":/Images/peashooterCard"));
@@ -45,6 +46,7 @@ GameScreen::GameScreen(QWidget *parent) :
     chomperCard = new QGraphicsPixmapItem(QPixmap(":/Images/chomperCard"));
     snowpeashooterCard = new QGraphicsPixmapItem(QPixmap(":/Images/snowpeaCard"));
     repeaterCard = new QGraphicsPixmapItem(QPixmap(":/Images/repeaterCard"));
+    potatomineCard = new QGraphicsPixmapItem(QPixmap(":/Images/potatomineCard"));
 
     //Setting their positions, making them selectable and adding them to the scene
     //peashooter
@@ -53,17 +55,17 @@ GameScreen::GameScreen(QWidget *parent) :
     scene->addItem(peashooterCard);
 
     //sunflower Card
-    sunflowerCard->setPos(peashooterCard->x()+50,y_alignment);
+    sunflowerCard->setPos(peashooterCard->x()+x_adj,y_alignment);
     sunflowerCard->setFlag(QGraphicsItem::ItemIsSelectable);
     scene->addItem(sunflowerCard);
 
     //walnut Card
-    walnutCard->setPos(sunflowerCard->x()+50,y_alignment);
+    walnutCard->setPos(sunflowerCard->x()+x_adj,y_alignment);
     walnutCard->setFlag(QGraphicsItem::ItemIsSelectable);
     scene->addItem(walnutCard);
 
     //cherrybomb Card
-    cherrybombCard->setPos(walnutCard->x()+50,y_alignment);
+    cherrybombCard->setPos(walnutCard->x()+x_adj,y_alignment);
     cherrybombCard->setFlag(QGraphicsItem::ItemIsSelectable);
     scene->addItem(cherrybombCard);
 
@@ -73,15 +75,19 @@ GameScreen::GameScreen(QWidget *parent) :
     scene->addItem(chomperCard);
 
     //snowpea card
-    snowpeashooterCard->setPos(chomperCard->x()+50,y_alignment);
-    snowpeashooterCard->setFlag((QGraphicsItem::ItemIsSelectable));
+    snowpeashooterCard->setPos(chomperCard->x()+x_adj,y_alignment);
+    snowpeashooterCard->setFlag(QGraphicsItem::ItemIsSelectable);
     scene->addItem(snowpeashooterCard);
 
     //repeater card
-    repeaterCard->setPos(snowpeashooterCard->x()+50,y_alignment);
-    repeaterCard->setFlag((QGraphicsItem::ItemIsSelectable));
+    repeaterCard->setPos(snowpeashooterCard->x()+x_adj,y_alignment);
+    repeaterCard->setFlag(QGraphicsItem::ItemIsSelectable);
     scene->addItem(repeaterCard);
 
+    //potatomine card
+    potatomineCard->setPos(repeaterCard->x()+x_adj,y_alignment);
+    potatomineCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    scene->addItem(potatomineCard);
 
     /*End of adding selectable cards to scene*/
 
@@ -100,9 +106,8 @@ GameScreen::GameScreen(QWidget *parent) :
     sunSpawnTimer->start(sunSpawnInterval);
 
     //Lawn plot properties
-    const int lawn_x = 240;
+    const int lawn_x = 240;//location of where row 1 and column 1 plot is
     const int lawn_y = 245;
-    //QPoint initial(240,245); //location of where row 1 and column 1 plot is
     const int lawn_plot_width = 80; //width of each plot
     const int lawn_plot_height = 96; //height of each plot
     lawnVector.resize(5);
@@ -120,14 +125,15 @@ GameScreen::GameScreen(QWidget *parent) :
             temp.botX = (temp.topX-1) + lawn_plot_width;
             temp.botY = (temp.topY-1) + lawn_plot_height;
             temp.isPlantable = true;
+            temp.containsPeashooter = false;
 
             lawnVector[i][j] = temp;
         }
     }
 
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 3; i++)
     {
-        QRect temp_rect(lawnVector[i][0].topX,lawnVector[i][0].topY,720,96);
+        QRect temp_rect(lawnVector[i%5][0].topX,lawnVector[i%5][0].topY,720,96);
         RegularZombie *zombie = new RegularZombie(&temp_rect);
         scene->addItem(zombie);
     }
@@ -160,10 +166,6 @@ void GameScreen::closeEvent(QCloseEvent *event)
 
     //Asks user if they want to exit the level
     QMessageBox exit_message;
-
-    int message_width = lawnVector[1][8].botX - lawnVector[1][0].topX;
-    int message_height = lawnVector[3][0].botY - lawnVector[1][0].topY;
-    exit_message.setFixedSize(message_width,message_height);
     exit_message.setText(tr("Are you sure you want to leave this level?"));
     exit_message.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
 
@@ -208,6 +210,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         chomperCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(sunflowerCard->isSelected() && Sun::getSunPoints() >= 50)
     {
@@ -226,6 +232,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         chomperCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(walnutCard->isSelected() && Sun::getSunPoints() >= 50)
     {
@@ -244,6 +254,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         chomperCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(cherrybombCard->isSelected() && Sun::getSunPoints() >= 150)
     {
@@ -262,6 +276,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         chomperCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(chomperCard->isSelected() && Sun::getSunPoints() >= 150)
     {
@@ -280,6 +298,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         walnutCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(snowpeashooterCard->isSelected() && Sun::getSunPoints() >= 175)
     {
@@ -298,6 +320,10 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         walnutCard->setOpacity(0.5);
         chomperCard->setOpacity(0.5);
         repeaterCard->setOpacity(0.5);
+        potatomineCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
     }
     else if(repeaterCard->isSelected() && Sun::getSunPoints() >= 200)
     {
@@ -316,19 +342,42 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         walnutCard->setOpacity(0.5);
         chomperCard->setOpacity(0.5);
         snowpeashooterCard->setOpacity(0.5);
-    }
+        potatomineCard->setOpacity(0.5);
 
-    //Checks if user clicked to plant
-    if(mouseState != 0)
-        addPlant(e);
+        //Leaves function
+        return;
+    }
+    else if(potatomineCard->isSelected() && Sun::getSunPoints() >= 50)
+    {
+        mouseState = 8; //Gives permission to potatomine
+
+        //Changes mouse cursor to reflect clicked plant
+        delete mouseCursor;
+        mouseCursor = new QCursor(QPixmap(":/Images/potatomineGray"));
+        this->setCursor(*mouseCursor);
+
+        //Decreases opacity of other cards to indicate selected one is active
+        potatomineCard->setOpacity(1);
+        cherrybombCard->setOpacity(0.5);
+        peashooterCard->setOpacity(0.5);
+        sunflowerCard->setOpacity(0.5);
+        walnutCard->setOpacity(0.5);
+        chomperCard->setOpacity(0.5);
+        snowpeashooterCard->setOpacity(0.5);
+        repeaterCard->setOpacity(0.5);
+
+        //Leaves function
+        return;
+    }
+    else if(mouseState != 0)
+    {
+        //Checks if user clicked to plant
+        addPlant(e->x(),e->y());
+    }
 }
 
-void GameScreen::addPlant(QMouseEvent *event)
+void GameScreen::addPlant(int m_x, int m_y)
 {
-    //Temporary variables to make conditional statements shorter
-    int m_x = event->x();
-    int m_y = event->y();
-
     for(int i = 0; i < (int)lawnVector.size(); i++)
     {
         for(int j = 0; j < (int)lawnVector.at(i).size(); j++)
@@ -338,7 +387,7 @@ void GameScreen::addPlant(QMouseEvent *event)
             if(((m_x >= temp->topX && m_x <= temp->botX) &&
                (m_y >= temp->topY && m_y <= temp->botY)) &&
                 temp->isPlantable)
-            {   
+            {
                 //Rect that holds information of the row it is planted on
                 QRect temp_rect;
                 temp_rect.setX(temp->topX);
@@ -347,20 +396,23 @@ void GameScreen::addPlant(QMouseEvent *event)
                 temp_rect.setHeight(temp->botY - temp->topY);
 
                 if(mouseState == 1)
-                {   
+                {
                     Peashooter *peashooter = new Peashooter(&temp_rect);
                     scene->addItem(peashooter);
 
-                    temp->isPlantable = false;
+                    //temp->isPlantable = false;
+                    temp->containsPeashooter = true;
                     Sun::updateSunPoints(-peashooter->getCost());
+                    goto reset;
                 }
                 else if(mouseState == 2)
-                {   
+                {
                     Sunflower *sunflower = new Sunflower(&temp_rect);
                     scene->addItem(sunflower);
 
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-sunflower->getCost());
+                    goto reset;
                 }
                 else if(mouseState == 3)
                 {
@@ -369,6 +421,7 @@ void GameScreen::addPlant(QMouseEvent *event)
 
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-walnut->getCost());
+                    goto reset;
                 }
                 else if(mouseState == 4)
                 {
@@ -380,6 +433,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     scene->addItem(cherrybomb);
 
                     Sun::updateSunPoints(-cherrybomb->getCost());
+                    goto reset;
                 }
                 else if(mouseState == 5)
                 {
@@ -390,6 +444,7 @@ void GameScreen::addPlant(QMouseEvent *event)
                     Chomper *chomper = new Chomper(&tile);
                     scene->addItem(chomper);
                     Sun::updateSunPoints(-chomper->getCost());
+                    goto reset;
                 }
                 else if(mouseState == 6)
                 {
@@ -398,23 +453,70 @@ void GameScreen::addPlant(QMouseEvent *event)
 
                     temp->isPlantable = false;
                     Sun::updateSunPoints(-peashooter->getCost());
+                    goto reset;
+                }
+                else if(mouseState == 7 && temp->containsPeashooter)
+                {
+                    QGraphicsRectItem *tile = new QGraphicsRectItem(temp->topX,temp->topY,
+                                                                    temp->botX-temp->topX,
+                                                                    temp->botY-temp->topY);
+                    tile->setPen(QPen(Qt::transparent));
+                    scene->addItem(tile);
+
+                    //Creates a list of items currently colliding with the mask
+                    QList<QGraphicsItem *> collision_list = scene->collidingItems(tile);
+
+                    //Checks for zombies colliding with mask and fires if there is atleast one zombie in row
+                    for(int i = 0; i < (int)collision_list.size(); i++)
+                    {
+                        Peashooter * item = dynamic_cast<Peashooter *>(collision_list.at(i));
+                        if (item)
+                        {
+                            delete item;
+                        }
+                    }
+
+                    delete tile;
+                    tile = NULL;
+
+                    Repeater *repeater = new Repeater(&temp_rect);
+                    scene->addItem(repeater);
+
+                    temp->isPlantable = false;
+                    Sun::updateSunPoints(-repeater->getCost());
+                    goto reset;
+                }
+                else if(mouseState == 8)
+                {
+                    QRect tile(temp->topX,temp->topY,
+                               temp->botX-temp->topX,
+                               temp->botY-temp->topY);
+
+                    Potatomine *potatomine = new Potatomine(&tile);
+                    scene->addItem(potatomine);
+
+                    Sun::updateSunPoints(-potatomine->getCost());
+                    goto reset;
                 }
 
-                //Returns the mouse to default state and cursor
-                mouseState = 0;
-                setDefaultCursor();
-
-                //Resets the opacities after plant is placed
-                peashooterCard->setOpacity(1);
-                sunflowerCard->setOpacity(1);
-                walnutCard->setOpacity(1);
-                cherrybombCard->setOpacity(1);
-                chomperCard->setOpacity(1);
-                snowpeashooterCard->setOpacity(1);
-                repeaterCard->setOpacity(1);
             }
         }
     }
+
+reset:
+    //Returns the mouse to default state and cursor
+    mouseState = 0;
+    setDefaultCursor();
+
+    //Resets the opacities after plant is placed
+    peashooterCard->setOpacity(1);
+    sunflowerCard->setOpacity(1);
+    walnutCard->setOpacity(1);
+    cherrybombCard->setOpacity(1);
+    chomperCard->setOpacity(1);
+    snowpeashooterCard->setOpacity(1);
+    repeaterCard->setOpacity(1);
+    potatomineCard->setOpacity(1);
 }
 
 void GameScreen::setDefaultCursor()

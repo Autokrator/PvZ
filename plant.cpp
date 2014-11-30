@@ -2,6 +2,11 @@
 
 Plant::Plant()
 {
+    isTargetable = true; //Majority plants are targetable
+}
+
+Plant::~Plant()
+{
 
 }
 

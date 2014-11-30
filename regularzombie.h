@@ -10,8 +10,8 @@ public:
 
 private:
     QPixmap *zombieImage;
+    QGraphicsLineItem *collisionLine;
     QRect activeRow;
-    QGraphicsRectItem *collisionRect;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);

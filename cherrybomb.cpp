@@ -8,6 +8,7 @@ Cherrybomb::Cherrybomb(QRect *lawn_tile)
     cost = 150;
     plantDamage = 90;
     fireRate = 1;
+    isTargetable = false;
 
     this->setPos(lawn_tile->x(),lawn_tile->y());
 
@@ -42,7 +43,6 @@ QRectF Cherrybomb::boundingRect() const
 
 void Cherrybomb::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(explosionBoundedArea);
     painter->drawPixmap(boundingRect(),*cherrybombImage,boundingRect());
     painter->drawPixmap(boundingRect(),*explosionImage,boundingRect());
 }
@@ -67,6 +67,7 @@ void Cherrybomb::advance(int phase)
     plantDamage = 0; //So call to advance does not do damage more than once
 
     this->setOpacity(this->opacity()-0.01);
+    this->setScale(this->scale()+0.01);
     if(this->opacity() <= 0)
         delete this;
 
