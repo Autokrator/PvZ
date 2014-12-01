@@ -9,9 +9,11 @@ public:
     Sunflower(QRect *plant_row = 0);
     ~Sunflower();
 private:
-    QPixmap *sunflowerImage;
-    Sun *sun;
-    QTime *makeSunCounter;
+    QPixmap *sunflowerImage; //holds sunflower pixmap
+    Sun *sun; //holds sun object that is spawned every fireRate
+    QTime *makeSunCounter; //Counter that is used to know when to spawn sun
+
+    //Virtual QGraphicsItem functions
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);

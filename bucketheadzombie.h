@@ -8,10 +8,11 @@ public:
     BucketHeadZombie(QRect *spawn_row = 0);
     ~BucketHeadZombie();
 private:
+    void move();
+    void updateImage();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);
-    void move();
 };
 
 #endif // BUCKETHEADZOMBIE_H

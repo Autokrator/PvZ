@@ -16,7 +16,7 @@ void Plant::decreaseHealth(int value)
     life -= value;
 }
 
-int Plant::getDamage() const
+double Plant::getDamage() const
 {
     return plantDamage;
 }

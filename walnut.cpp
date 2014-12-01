@@ -8,7 +8,10 @@ Walnut::Walnut(QRect *plant_row)
     plantDamage = 0;
     fireRate = 0;
 
+    //Sets up position based on plant_row
     this->setPos(plant_row->x(),plant_row->y()+10);
+
+    //loads walnut pixmap
     walnutImage = new QPixmap(":/Images/walnut");
 }
 
@@ -24,14 +27,15 @@ QRectF Walnut::boundingRect() const
 
 void Walnut::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    //draws walnutImage
     painter->drawPixmap(boundingRect(),*walnutImage,boundingRect());
-
 }
 
 void Walnut::advance(int phase)
 {
     if(!phase) return;
 
+    //Deletes instance if life is 0 or less
     if(life <= 0)
     {
         delete this;

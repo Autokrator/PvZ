@@ -1,15 +1,16 @@
 #include "bucketheadzombie.h"
+#include "lawnmower.h"
 
 BucketHeadZombie::BucketHeadZombie(QRect *spawn_row)
 {
-    xCordinate = 700;
+    xCordinate = spawn_row->x()+spawn_row->width();
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
 
     zombieImage = new QPixmap(":/Images/buckethead");
 
-    equipmentLife = 55;
+    equipmentLife = 5;
     zombieLife = 10;
     damage = 1;
     attackRate = 500;
@@ -34,38 +35,29 @@ QRectF BucketHeadZombie::boundingRect() const
 
 void BucketHeadZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(boundingRect());
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
-    if(!isSlowed)
-        painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
-    else
-    {
-        //Deletes current zombie image
-        delete zombieImage;
-
-        //Adjusted image if zombie is slowed
-        zombieImage = new QPixmap(":/Images/bucketheadSlowed");
-        painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
-    }
+    painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
 }
 
 void BucketHeadZombie::advance(int phase)
 {
     if(!phase) return;
 
+    //Deletes zombie if health is 0 or less
     if(zombieLife <= 0)
     {
         delete this;
         return;
     }
 
+    updateImage();
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
 }
 
 void BucketHeadZombie::move()
 {
-    int y_adj = 20;
+    int y_adj = 40;
 
     collisionLine->setLine(xCordinate,yCordinate+y_adj,xCordinate+y_adj,yCordinate+y_adj);
 
@@ -95,8 +87,21 @@ void BucketHeadZombie::move()
 
             return;
         }
+
+        LawnMower *item2 = dynamic_cast<LawnMower *>(collision_list.at(i));
+        if(item2)
+        {
+            item2->activateMovement();
+            zombieLife -= 9999;
+            return;
+        }
     }
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+}
+
+void BucketHeadZombie::updateImage()
+{
+
 }

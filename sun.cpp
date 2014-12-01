@@ -22,8 +22,14 @@ Sun::Sun() : timeout(7500)
 
     //Setting velocity of sun
     xVelocity = 0;
-    yVelocity = random(11,17); //Speed interval which when decreased by 0.2 increaments
-                               //results in landing on the lawn tiles (randomly)
+    yVelocity = 3;
+
+    //Setting up yLand
+    int lawn_start_y = 245; //y location of first lawn tile (row1,cloumn1)
+    int lawn_start_height = 96; //height of each lawntile
+    int lawn_rows = 5; //number of rows in the lawn
+    yLand =random(lawn_start_y, //The landing must be between the first row and (last row - sunImage height)
+                  lawn_start_y + lawn_start_height*lawn_rows - sunImage->height());
 
     //Default not-clicked state
     isClicked = false;
@@ -121,11 +127,10 @@ void Sun::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Sun::move(double time)
 {
     //Appropriate move is applied based on type of sun
-    if(yVelocity >= 0 && type == 1) //Moves until sun lands on lawn
+    if(this->y() <= yLand && type == 1) //Moves until sun lands on lawn
     {
         //Calculates the new y coordinate (falling animation)
         position.setY(position.y() + round(yVelocity*time));
-        yVelocity -= 0.2;
 
         //Rotation effect
         this->setRotation(this->rotation()+1);

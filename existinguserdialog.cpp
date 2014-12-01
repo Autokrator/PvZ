@@ -49,7 +49,7 @@ void ExistingUserDialog::on_deleteButton_clicked()
         temp_list = playerList.at(i).split(':');
 
         //checks if the name component matches the one being deleted
-        if(temp_list.at(4) != user_delete)
+        if(temp_list.at(1) != user_delete)
             final_text.append(playerList.at(i) + "\n");
     }
 
@@ -92,8 +92,8 @@ void ExistingUserDialog::on_selectButton_clicked()
         temp_list = playerList.at(i).split(':');
 
         //Gets the level for the selected user based on index in temp_list
-        if(inputUser == temp_list.at(4))
-            userLevel = temp_list.at(5).split(',').at(0); //removes extra ',' after level
+        if(inputUser == temp_list.at(1))
+            userLevel = temp_list.at(2).split(',').at(0); //removes extra ',' after level
     }
 
     username_file.close(); //closes file
@@ -119,12 +119,12 @@ void ExistingUserDialog::readFromPlayerFile()
         playerList.append(read_users.readLine());
 
     //Loop start at the end of playerList so latest timestamps are displayed first
-    for(int i = playerList.length() - 1; i >= 0; i--)
+    for(int i = 0; i < playerList.size(); i++)
     {
         //Creates a temporary list to hold pieces of each line from player file
         QStringList temp_list;
         temp_list = playerList.at(i).split(':');
-        ui->playerListBox->addItem(temp_list.at(4)); //Adds the name to combo box
+        ui->playerListBox->addItem(temp_list.at(1)); //Adds the name to combo box
     }
     //closes file
     username_file.close();

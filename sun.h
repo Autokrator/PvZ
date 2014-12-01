@@ -19,6 +19,7 @@ private:
     static int sunPoints; //Holds the current value of sun points current player has
     double xVelocity; //control movement in x direction
     double yVelocity; //control movement in y direction
+    double yLand; //final y position of type 1 sun
     double yVelTemp; //holds intial y velocity
     QPoint position; //Holds position of the object
     bool isClicked; //Indicates the state of sun object in relation to the mouse button

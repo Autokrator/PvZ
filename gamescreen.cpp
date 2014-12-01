@@ -2,7 +2,7 @@
 #include <QDebug>
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
+    QGraphicsView(parent), sunSpawnInterval(500), playerName("Guest"), playerLevel("1"),
     mouseCursor(0)
 {
     //Makes a graphics view of following size
@@ -129,10 +129,10 @@ GameScreen::GameScreen(QWidget *parent) :
         }
     }
 
-    for(int i = 0; i < 15; i++)
+    for(int i = 0; i < 1; i++)
     {
-        QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,720,96);
-        ConeHeadZombie *zombie = new ConeHeadZombie(&temp_rect);
+        QRect temp_rect(lawnVector[4][0].topX,lawnVector[4][0].topY,720,96);
+        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_rect);
         scene->addItem(zombie);
     }
 

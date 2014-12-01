@@ -83,7 +83,7 @@ void NewUserDialog::writeToPlayerFile(QString file_name)
         write_users << playerList.at(i) << "\n"; //Rewrites previous players
 
     //Writes new player with timestamp and level
-    write_users << QDateTime::currentDateTime().toString("[dd.MM.yyyy hh:mm:ss:zzz]:")
+    write_users << QDateTime::currentDateTime().toString("[yyyyMMddhhmmss]:")
                 << inputUserName << ":1,\n"; //":1" because all new players start at level 1
 
     //closes file

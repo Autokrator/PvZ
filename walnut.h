@@ -8,7 +8,9 @@ public:
     Walnut(QRect *plant_row = 0);
     ~Walnut();
 private:
-    QPixmap *walnutImage;
+    QPixmap *walnutImage; //holds walnut pixmap
+
+    //Virtual QGraphicsItem functions
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);

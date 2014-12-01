@@ -1,10 +1,10 @@
 #include "regularzombie.h"
 #include <QDebug>
-#include "bullet.h"
+#include "lawnmower.h"
 
 RegularZombie::RegularZombie(QRect *spawn_row)
 {
-    xCordinate = 700;
+    xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -69,7 +69,7 @@ void RegularZombie::advance(int phase)
 
 void RegularZombie::move()
 {
-    int y_adj = 20;
+    int y_adj = 40;
     collisionLine->setLine(xCordinate,yCordinate+y_adj,xCordinate+y_adj,yCordinate+y_adj);
 
     //Creates a list of items currently colliding with the mask
@@ -97,6 +97,14 @@ void RegularZombie::move()
             else if(!item->isTargetable)
                 xCordinate -= xVelocity;
 
+            return;
+        }
+
+        LawnMower *item2 = dynamic_cast<LawnMower *>(collision_list.at(i));
+        if(item2)
+        {
+            item2->activateMovement();
+            zombieLife -= 9999;
             return;
         }
     }

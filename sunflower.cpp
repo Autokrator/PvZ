@@ -13,9 +13,9 @@ Sunflower::Sunflower(QRect *plant_row)
 
     //loads the sunflower image
     sunflowerImage = new QPixmap(":/Images/sunflower");
+
     makeSunCounter = new QTime; //loads QTime counter
     makeSunCounter->start(); //starts the counter
-
 }
 
 Sunflower::~Sunflower()
@@ -31,14 +31,15 @@ QRectF Sunflower::boundingRect() const
 
 void Sunflower::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    //Draws sunflowerImage
     painter->drawPixmap(boundingRect(),*sunflowerImage,boundingRect());
-
 }
 
 void Sunflower::advance(int phase)
 {
     if(!phase) return;
 
+    //destroys sunflower instance if health is 0 or less
     if(life <= 0)
     {
         delete this;

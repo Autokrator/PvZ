@@ -67,7 +67,7 @@ void ConeHeadZombie::advance(int phase)
 
 void ConeHeadZombie::move()
 {
-    int y_adj = 20;
+    int y_adj = 40;
     collisionLine->setLine(xCordinate,yCordinate+y_adj,xCordinate+y_adj,yCordinate+y_adj);
 
     //Creates a list of items currently colliding with the mask
@@ -101,7 +101,7 @@ void ConeHeadZombie::move()
         if(item2)
         {
             item2->activateMovement();
-            zombieLife -=9999;
+            zombieLife -= 9999;
             return;
         }
     }
