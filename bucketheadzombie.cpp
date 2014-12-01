@@ -34,6 +34,7 @@ QRectF BucketHeadZombie::boundingRect() const
 
 void BucketHeadZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->drawRect(boundingRect());
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
     if(!isSlowed)
         painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());

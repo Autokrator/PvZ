@@ -1,8 +1,9 @@
 #include "coneheadzombie.h"
+#include "lawnmower.h"
 
 ConeHeadZombie::ConeHeadZombie(QRect *spawn_row)
 {
-    xCordinate = 700;
+    xCordinate = qrand()%600 + 400;
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -34,6 +35,8 @@ QRectF ConeHeadZombie::boundingRect() const
 
 void ConeHeadZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->drawRect(boundingRect());
+
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
     if(!isSlowed)
         painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
@@ -91,6 +94,14 @@ void ConeHeadZombie::move()
             else if(!item->isTargetable)
                 xCordinate -= xVelocity;
 
+            return;
+        }
+
+        LawnMower *item2 = dynamic_cast<LawnMower *>(collision_list.at(i));
+        if(item2)
+        {
+            item2->activateMovement();
+            zombieLife -=9999;
             return;
         }
     }

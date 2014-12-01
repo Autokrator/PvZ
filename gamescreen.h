@@ -19,6 +19,7 @@
 #include "newspaperzombie.h"
 #include "bucketheadzombie.h"
 #include "flagzombie.h"
+#include "lawnmower.h"
 
 class GameScreen : public QGraphicsView
 {
@@ -31,7 +32,6 @@ public:
 private:
     //Holds the basic properties for a lawn piece
     struct lawnPiece{
-        bool isPlantable, containsPeashooter;
         int topX, topY, botX, botY;
     };
     //Holds the the 45 lawnpieces (struct) that make up the lawn

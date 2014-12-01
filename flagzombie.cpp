@@ -34,6 +34,8 @@ QRectF FlagZombie::boundingRect() const
 
 void FlagZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->drawRect(boundingRect());
+
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
         if(!isSlowed)
             painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());

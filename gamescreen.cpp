@@ -124,19 +124,21 @@ GameScreen::GameScreen(QWidget *parent) :
             temp.topY = lawn_y + (i*lawn_plot_height-1);
             temp.botX = (temp.topX-1) + lawn_plot_width;
             temp.botY = (temp.topY-1) + lawn_plot_height;
-            temp.isPlantable = true;
-            temp.containsPeashooter = false;
 
             lawnVector[i][j] = temp;
         }
     }
 
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < 15; i++)
     {
-        QRect temp_rect(lawnVector[i%5][0].topX,lawnVector[i%5][0].topY,720,96);
-        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_rect);
+        QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,720,96);
+        ConeHeadZombie *zombie = new ConeHeadZombie(&temp_rect);
         scene->addItem(zombie);
     }
+
+    QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,80,96);
+    LawnMower *lawn_mower = new LawnMower(&temp_rect,(int)scene->width());
+    scene->addItem(lawn_mower);
 }
 
 GameScreen::~GameScreen()
@@ -385,9 +387,36 @@ void GameScreen::addPlant(int m_x, int m_y)
             lawnPiece *temp = &lawnVector[i][j];
             
             if(((m_x >= temp->topX && m_x <= temp->botX) &&
-               (m_y >= temp->topY && m_y <= temp->botY)) &&
-                temp->isPlantable)
+               (m_y >= temp->topY && m_y <= temp->botY)))
             {
+                //Checks for plant item in current tile
+                QGraphicsRectItem *tile = new QGraphicsRectItem(temp->topX,temp->topY,
+                                                                temp->botX-temp->topX,
+                                                                temp->botY-temp->topY);
+                tile->setPen(QPen(Qt::transparent));
+                scene->addItem(tile);
+
+                //Creates a list of items currently colliding with the mask
+                QList<QGraphicsItem *> collision_list = scene->collidingItems(tile);
+
+                if(mouseState != 7)
+                {
+                    //Checks for zombies colliding with mask and fires if there is atleast one zombie in row
+                    for(int i = 0; i < (int)collision_list.size(); i++)
+                    {
+                        Plant * item = dynamic_cast<Plant *>(collision_list.at(i));
+                        if (item)
+                        {
+                            delete tile;
+                            tile = NULL;
+                            goto reset;
+                        }
+                    }
+                    //deletes the tile object created for collision test
+                    delete tile;
+                    tile = NULL;
+                }
+
                 //Rect that holds information of the row it is planted on
                 QRect temp_rect;
                 temp_rect.setX(temp->topX);
@@ -399,9 +428,6 @@ void GameScreen::addPlant(int m_x, int m_y)
                 {
                     Peashooter *peashooter = new Peashooter(&temp_rect);
                     scene->addItem(peashooter);
-
-                    //temp->isPlantable = false;
-                    temp->containsPeashooter = true;
                     Sun::updateSunPoints(-peashooter->getCost());
                     goto reset;
                 }
@@ -409,8 +435,6 @@ void GameScreen::addPlant(int m_x, int m_y)
                 {
                     Sunflower *sunflower = new Sunflower(&temp_rect);
                     scene->addItem(sunflower);
-
-                    temp->isPlantable = false;
                     Sun::updateSunPoints(-sunflower->getCost());
                     goto reset;
                 }
@@ -418,8 +442,6 @@ void GameScreen::addPlant(int m_x, int m_y)
                 {
                     Walnut *walnut = new Walnut(&temp_rect);
                     scene->addItem(walnut);
-
-                    temp->isPlantable = false;
                     Sun::updateSunPoints(-walnut->getCost());
                     goto reset;
                 }
@@ -431,7 +453,6 @@ void GameScreen::addPlant(int m_x, int m_y)
 
                     Cherrybomb *cherrybomb = new Cherrybomb(&tile);
                     scene->addItem(cherrybomb);
-
                     Sun::updateSunPoints(-cherrybomb->getCost());
                     goto reset;
                 }
@@ -450,22 +471,11 @@ void GameScreen::addPlant(int m_x, int m_y)
                 {
                     Peashooter *peashooter = new Peashooter(&temp_rect,true);
                     scene->addItem(peashooter);
-
-                    temp->isPlantable = false;
                     Sun::updateSunPoints(-peashooter->getCost());
                     goto reset;
                 }
-                else if(mouseState == 7 && temp->containsPeashooter)
+                else if(mouseState == 7)
                 {
-                    QGraphicsRectItem *tile = new QGraphicsRectItem(temp->topX,temp->topY,
-                                                                    temp->botX-temp->topX,
-                                                                    temp->botY-temp->topY);
-                    tile->setPen(QPen(Qt::transparent));
-                    scene->addItem(tile);
-
-                    //Creates a list of items currently colliding with the mask
-                    QList<QGraphicsItem *> collision_list = scene->collidingItems(tile);
-
                     //Checks for zombies colliding with mask and fires if there is atleast one zombie in row
                     for(int i = 0; i < (int)collision_list.size(); i++)
                     {
@@ -473,18 +483,14 @@ void GameScreen::addPlant(int m_x, int m_y)
                         if (item)
                         {
                             delete item;
+                            Repeater *repeater = new Repeater(&temp_rect);
+                            scene->addItem(repeater);
+                            Sun::updateSunPoints(-repeater->getCost());
+                            goto reset;
                         }
                     }
 
-                    delete tile;
-                    tile = NULL;
-
-                    Repeater *repeater = new Repeater(&temp_rect);
-                    scene->addItem(repeater);
-
-                    temp->isPlantable = false;
-                    Sun::updateSunPoints(-repeater->getCost());
-                    goto reset;
+                    goto reset; //if no peashooter is found on tile
                 }
                 else if(mouseState == 8)
                 {

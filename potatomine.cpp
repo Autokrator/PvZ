@@ -10,7 +10,7 @@ Potatomine::Potatomine(QRect *lawn_tile)
     fireRate = 100;
     detonate = false;
 
-    this->setPos(lawn_tile->x(),lawn_tile->y());
+    this->setPos(lawn_tile->x(),lawn_tile->y()+20);
 
     potatomineImage = new QPixmap(":/Images/potatomine");
     explosionImage = new QPixmap(":/Images/explosion");

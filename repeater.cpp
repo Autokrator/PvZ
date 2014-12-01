@@ -10,7 +10,7 @@ Repeater::Repeater(QRect *plant_row)
     cost = 200;
 
     //setting the position of peashooter based on planting row
-    this->setPos(plant_row->x(),plant_row->y());
+    this->setPos(plant_row->x(),plant_row->y()+20);
 
     activeRow = *plant_row;
 
@@ -82,6 +82,7 @@ void Repeater::fireBullet()
         {
             //Fire a bullet in the row and exits function
             bullet = new Bullet(slowEffect,this);
+            bullet->setScale(0.9);
             scene()->addItem(bullet);
             return;
         }

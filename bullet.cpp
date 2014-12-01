@@ -35,6 +35,7 @@ QRectF Bullet::boundingRect() const
 
 void Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->drawRect(boundingRect());
     painter->drawPixmap(boundingRect(),*bulletImage,boundingRect());
 }
 

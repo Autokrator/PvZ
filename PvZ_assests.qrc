@@ -45,6 +45,7 @@
         <file alias="newspaperzombie">RvZ_assests/Newspaper_Zombie.png</file>
         <file alias="bucketheadSlowed">RvZ_assests/zombie_buckethead_slowed.png</file>
         <file alias="buckethead">RvZ_assests/zombie_buckethead.png</file>
+        <file alias="lawnMower">RvZ_assests/Lawn_Mower.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

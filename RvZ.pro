@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     coneheadzombie.cpp \
     newspaperzombie.cpp \
     bucketheadzombie.cpp \
-    flagzombie.cpp
+    flagzombie.cpp \
+    lawnmower.cpp
 
 HEADERS  += mainwindow.h \
     newuserdialog.h \
@@ -55,7 +56,8 @@ HEADERS  += mainwindow.h \
     coneheadzombie.h \
     newspaperzombie.h \
     bucketheadzombie.h \
-    flagzombie.h
+    flagzombie.h \
+    lawnmower.h
 
 FORMS    += mainwindow.ui \
     newuserdialog.ui \
