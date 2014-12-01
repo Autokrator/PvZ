@@ -59,15 +59,17 @@ private:
     void setDefaultCursor(); //Sets the mouse to a default cursor
 
     //Plant selection cards used to know which plant is selected or can be selected
-    QGraphicsPixmapItem *peashooterCard;
-    QGraphicsPixmapItem *sunflowerCard;
-    QGraphicsPixmapItem *cherrybombCard;
-    QGraphicsPixmapItem *walnutCard;
-    QGraphicsPixmapItem *repeaterCard;
-    QGraphicsPixmapItem *chomperCard;
-    QGraphicsPixmapItem *snowpeashooterCard;
-    QGraphicsPixmapItem *potatomineCard;
+    //QGraphicsRect Item that cover corresponding card while seeding timer is counting down
+    QGraphicsPixmapItem *peashooterCard;        QGraphicsRectItem *peashooterRect;
+    QGraphicsPixmapItem *sunflowerCard;         QGraphicsRectItem *sunflowerRect;
+    QGraphicsPixmapItem *cherrybombCard;        QGraphicsRectItem *cherrybombRect;
+    QGraphicsPixmapItem *walnutCard;            QGraphicsRectItem *walnutRect;
+    QGraphicsPixmapItem *repeaterCard;          QGraphicsRectItem *repeaterRect;
+    QGraphicsPixmapItem *chomperCard;           QGraphicsRectItem *chomperRect;
+    QGraphicsPixmapItem *snowpeashooterCard;    QGraphicsRectItem *snowpeashooterRect;
+    QGraphicsPixmapItem *potatomineCard;        QGraphicsRectItem *potatomineRect;
 
+    //Timers used express each plant's post seeding period
     QTimer *peashooterTimer;
     QTimer *sunflowerTimer;
     QTimer *cherrybombTimer;
@@ -77,6 +79,15 @@ private:
     QTimer *snowpeashooterTimer;
     QTimer *potatomineTimer;
 
+    //Level functions and members
+    void loadLevel();           //Loads the lawn tile information for current level
+                                   //Loads triggers zombie sequence for level
+    QStringList zombieSequence; //Sequence information for current level
+    int activeRows;                   //Number of active rows for current level
+    double startTime;           //Time until first zombie spawn (in ms)
+    double startingInterval;    //Time till second zombie spawn
+    double intervalDecrement;   //The value by which the the starting interval is lowered
+                                // for each successive zombie
 signals:
     void showMainWindow(); //Signals to show mainwindow (menu)
     void deleteGameWindow(); //Signals the mainwindow to delte gameWindow object
@@ -84,6 +95,16 @@ signals:
 private slots:
     void spawnSun(); //Connected to sunSpawnTimer, used to spawn new suns
     void checkSunPoints(); //Check sunpoints and adjusts plant selection cards accordingly
+
+    //Seeding timer slots
+    void peashooterCountdown();
+    void sunflowerCountdown();
+    void cherrybombCountdown();
+    void walnutCountdown();
+    void repeaterCountdown();
+    void chomperCountdown();
+    void snowpeashooterCountdown();
+    void potatomineCountdown();
 
 };
 

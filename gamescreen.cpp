@@ -101,13 +101,73 @@ GameScreen::GameScreen(QWidget *parent) :
     snowpeashooterTimer = new QTimer(this);
     potatomineTimer = new QTimer(this);
 
+    //Connecting all the timers to coressponding countdown slots
+    connect(peashooterTimer,SIGNAL(timeout()),this,SLOT(peashooterCountdown()));
+    connect(sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunflowerCountdown()));
+    connect(cherrybombTimer,SIGNAL(timeout()),this,SLOT(cherrybombCountdown()));
+    connect(walnutTimer,SIGNAL(timeout()),this,SLOT(walnutCountdown()));
+    connect(repeaterTimer,SIGNAL(timeout()),this,SLOT(repeaterCountdown()));
+    connect(chomperTimer,SIGNAL(timeout()),this,SLOT(chomperCountdown()));
+    connect(snowpeashooterTimer,SIGNAL(timeout()),this,SLOT(snowpeashooterCountdown()));
+    connect(potatomineTimer,SIGNAL(timeout()),this,SLOT(potatomineCountdown()));
+
+
     //Adds dynamic hud elements
     Hud = new GameHud;
     scene->addItem(Hud);
 
-    //Adding all plant selection card address location to the Hud
-    Hud->setPlantCards(peashooterCard,sunflowerCard,cherrybombCard,walnutCard,
-                       repeaterCard,chomperCard,snowpeashooterCard,potatomineCard);
+    //Creates Rect item used to cover cards during countdown so user knows when countdown finishes
+    peashooterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    sunflowerRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    cherrybombRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    walnutRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    chomperRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    repeaterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    potatomineRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+    snowpeashooterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
+
+    /*Adding rectangles to the scene - Start */
+    peashooterRect->setOpacity(0.3);
+    peashooterRect->setBrush(QBrush(Qt::black));
+    peashooterRect->setPos(peashooterCard->pos());
+    scene->addItem(peashooterRect);
+
+    sunflowerRect->setOpacity(0.3);
+    sunflowerRect->setBrush(QBrush(Qt::black));
+    sunflowerRect->setPos(sunflowerCard->pos());
+    scene->addItem(sunflowerRect);
+
+    cherrybombRect->setOpacity(0.3);
+    cherrybombRect->setBrush(QBrush(Qt::black));
+    cherrybombRect->setPos(cherrybombCard->pos());
+    scene->addItem(cherrybombRect);
+
+    walnutRect->setOpacity(0.3);
+    walnutRect->setBrush(QBrush(Qt::black));
+    walnutRect->setPos(walnutCard->pos());
+    scene->addItem(walnutRect);
+
+    chomperRect->setOpacity(0.3);
+    chomperRect->setBrush(QBrush(Qt::black));
+    chomperRect->setPos(chomperCard->pos());
+    scene->addItem(chomperRect);
+
+    repeaterRect->setOpacity(0.3);
+    repeaterRect->setBrush(QBrush(Qt::black));
+    repeaterRect->setPos(repeaterCard->pos());
+    scene->addItem(repeaterRect);
+
+    potatomineRect->setOpacity(0.3);
+    potatomineRect->setBrush(QBrush(Qt::black));
+    potatomineRect->setPos(potatomineCard->pos());
+    scene->addItem(potatomineRect);
+
+    snowpeashooterRect->setOpacity(0.3);
+    snowpeashooterRect->setBrush(QBrush(Qt::black));
+    snowpeashooterRect->setPos(snowpeashooterCard->pos());
+    scene->addItem(snowpeashooterRect);
+
+    /*End of adding graphics rect*/
 
     //Refresh rate of 20 ms
     timer = new QTimer(this);
@@ -120,29 +180,8 @@ GameScreen::GameScreen(QWidget *parent) :
     connect(sunSpawnTimer,SIGNAL(timeout()),this,SLOT(spawnSun()));
     sunSpawnTimer->start(sunSpawnInterval);
 
-    //Lawn plot properties
-    const int lawn_x = 240;//location of where row 1 and column 1 plot is
-    const int lawn_y = 245;
-    const int lawn_plot_width = 80; //width of each plot
-    const int lawn_plot_height = 96; //height of each plot
-    lawnVector.resize(5);
-
-    for(int i = 0; i < 5; i++)
-    {
-        lawnVector.at(i).resize(9);
-
-        for(int j = 0; j < 9; j++)
-        {
-            //Sets the top and bottom cordinates for each plot
-            lawnPiece temp;
-            temp.topX = lawn_x + (j*lawn_plot_width);
-            temp.topY = lawn_y + (i*lawn_plot_height-1);
-            temp.botX = (temp.topX-1) + lawn_plot_width;
-            temp.botY = (temp.topY-1) + lawn_plot_height;
-
-            lawnVector[i][j] = temp;
-        }
-    }
+    //Load level elements
+    loadLevel();
 
 }
 
@@ -460,6 +499,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Peashooter *peashooter = new Peashooter(&temp_rect);
                     scene->addItem(peashooter);
                     Sun::updateSunPoints(-peashooter->getCost());
+
+                    peashooterCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    peashooterTimer->start(Peashooter::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 2)
@@ -467,6 +509,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Sunflower *sunflower = new Sunflower(&temp_rect);
                     scene->addItem(sunflower);
                     Sun::updateSunPoints(-sunflower->getCost());
+
+                    sunflowerCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    sunflowerTimer->start(Sunflower::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 3)
@@ -474,6 +519,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Walnut *walnut = new Walnut(&temp_rect);
                     scene->addItem(walnut);
                     Sun::updateSunPoints(-walnut->getCost());
+
+                    walnutCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    walnutTimer->start(Walnut::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 4)
@@ -485,6 +533,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Cherrybomb *cherrybomb = new Cherrybomb(&tile);
                     scene->addItem(cherrybomb);
                     Sun::updateSunPoints(-cherrybomb->getCost());
+
+                    cherrybombCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    cherrybombTimer->start(Cherrybomb::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 5)
@@ -496,6 +547,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Chomper *chomper = new Chomper(&tile);
                     scene->addItem(chomper);
                     Sun::updateSunPoints(-chomper->getCost());
+
+                    chomperCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    chomperTimer->start(Chomper::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 6)
@@ -503,6 +557,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                     Peashooter *peashooter = new Peashooter(&temp_rect,true);
                     scene->addItem(peashooter);
                     Sun::updateSunPoints(-peashooter->getCost());
+
+                    snowpeashooterCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    snowpeashooterTimer->start(Peashooter::seedingTime);
                     goto reset;
                 }
                 else if(mouseState == 7)
@@ -517,6 +574,9 @@ void GameScreen::addPlant(int m_x, int m_y)
                             Repeater *repeater = new Repeater(&temp_rect);
                             scene->addItem(repeater);
                             Sun::updateSunPoints(-repeater->getCost());
+
+                            repeaterCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                            repeaterTimer->start(Repeater::seedingTime);
                             goto reset;
                         }
                     }
@@ -531,8 +591,10 @@ void GameScreen::addPlant(int m_x, int m_y)
 
                     Potatomine *potatomine = new Potatomine(&tile);
                     scene->addItem(potatomine);
-
                     Sun::updateSunPoints(-potatomine->getCost());
+
+                    potatomineCard->setFlag(QGraphicsItem::ItemIsSelectable,false);
+                    potatomineTimer->start(Potatomine::seedingTime);
                     goto reset;
                 }
 
@@ -562,6 +624,125 @@ void GameScreen::setDefaultCursor()
     delete mouseCursor;
     mouseCursor = new QCursor(QPixmap(":/Images/mainCursor"),0,0);
     this->setCursor(*mouseCursor);
+}
+
+void GameScreen::loadLevel()
+{
+    QString file_name("/Users/Parth/Documents/QT/RvZ/rvz_levels.csv");
+
+    QFile level_file(file_name);
+
+    //Displays warning if file is not readable and exits program
+    if(!level_file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        QMessageBox::warning(0,"Cannot execute RvZ","rvz_levels.csv does not exist or is unreadable!",
+                             QMessageBox::Ok);
+        return;
+    }
+
+    QTextStream read_level(&level_file);
+    while(!read_level.atEnd())
+    {
+        QString temp_level;
+        QStringList temp_list;
+
+        temp_list = read_level.readLine().split(':');
+        temp_level = temp_list.at(0);
+
+        if(temp_level == playerLevel) //searches for current level
+        {
+            //Extracts level information from file
+            zombieSequence = temp_list.at(1).split(',');
+            activeRows = temp_list.at(2).toInt();
+            startTime = temp_list.at(3).toDouble();
+            startingInterval = temp_list.at(4).toDouble();
+            intervalDecrement = temp_list.at(5).toDouble();
+
+            goto close;
+        }
+    }
+
+    close:
+    level_file.close(); //closes file
+
+    //Loading lawn from activeRows
+
+    //Lawn plot properties
+    const int lawn_x = 240;//location of where row 1 and column 1 plot is
+    const int lawn_y = 245;
+    const int lawn_plot_width = 80; //width of each plot
+    const int lawn_plot_height = 96; //height of each plot
+    lawnVector.resize(5); //max five rows
+
+    //Generating 2D lawn vector (5x9)
+    for(int i = 0; i < (int)lawnVector.size(); i++)
+    {
+        lawnVector.at(i).resize(9); //max number of columns
+
+        for(int j = 0; j < (int)lawnVector.at(i).size(); j++)
+        {
+            //Sets the top and bottom cordinates for each plot
+            lawnPiece temp;
+            temp.topX = lawn_x + (j*lawn_plot_width);
+            temp.topY = lawn_y + (i*lawn_plot_height-1);
+            temp.botX = (temp.topX-1) + lawn_plot_width;
+            temp.botY = (temp.topY-1) + lawn_plot_height;
+
+            lawnVector[i][j] = temp;
+        }
+    }
+
+    //Adding dead zones to the lawn to show inactive lanes
+    if(activeRows == 5)
+        return;
+
+    //Creating inactive rects to use for drawing
+    QRect inactive_area_1;
+    QRect inactive_area_2;
+
+    activeRows = 3;
+    if(activeRows == 1)
+    {
+        //Top 2 rows
+        inactive_area_1.setX(lawnVector[0][0].topX);
+        inactive_area_1.setY(lawnVector[0][0].topY);
+        inactive_area_1.setWidth(lawn_plot_width*9);
+        inactive_area_1.setHeight(lawn_plot_height*2);
+
+        //Bottom 2 rows
+        inactive_area_2.setX(lawnVector[3][0].topX);
+        inactive_area_2.setY(lawnVector[3][0].topY);
+        inactive_area_2.setWidth(lawn_plot_width*9);
+        inactive_area_2.setHeight(lawn_plot_height*2);
+    }
+    else if(activeRows == 3)
+    {
+        //Top row
+        inactive_area_1.setX(lawnVector[0][0].topX);
+        inactive_area_1.setY(lawnVector[0][0].topY);
+        inactive_area_1.setWidth(lawn_plot_width*9);
+        inactive_area_1.setHeight(lawn_plot_height);
+
+        //Bottom row
+        inactive_area_2.setX(lawnVector[4][0].topX);
+        inactive_area_2.setY(lawnVector[4][0].topY);
+        inactive_area_2.setWidth(lawn_plot_width*9);
+        inactive_area_2.setHeight(lawn_plot_height);
+    }
+
+    //Creates visual representation on scene
+    QGraphicsRectItem *deadArea = new QGraphicsRectItem(inactive_area_1);
+    deadArea->setPen(QPen(Qt::transparent));
+    deadArea->setBrush(QBrush(QColor(139,69,19)));
+    deadArea->setOpacity(0.4);
+    scene->addItem(deadArea);
+
+    deadArea = new QGraphicsRectItem(inactive_area_2);
+    deadArea->setPen(QPen(Qt::transparent));
+    deadArea->setBrush(QBrush(QColor(139,69,19)));
+    deadArea->setOpacity(0.4);
+    scene->addItem(deadArea);
+
 }
 
 void GameScreen::spawnSun()
@@ -660,5 +841,103 @@ void GameScreen::checkSunPoints()
         potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
         snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCard"));
     }
+
+    //Peashooter countdown
+    if(peashooterTimer->remainingTime() == -1) //timer stopped
+        peashooterRect->hide();
+    else
+        peashooterRect->show();
+
+
+    //Sunflower countdown
+    if(sunflowerTimer->remainingTime() == -1) //timer stopped
+        sunflowerRect->hide();
+    else
+        sunflowerRect->show();
+
+    //Cherrybomb countdown
+    if(cherrybombTimer->remainingTime() == -1) //timer stopped
+        cherrybombRect->hide();
+    else
+        cherrybombRect->show();
+
+    //Walnut countdown
+    if(walnutTimer->remainingTime() == -1) //timer stopped
+        walnutRect->hide();
+    else
+        walnutRect->show();
+
+    //Repeater countdown
+    if(repeaterTimer->remainingTime() == -1) //timer stopped
+        repeaterRect->hide();
+    else
+        repeaterRect->show();
+
+    //Snowpea countdown
+    if(snowpeashooterTimer->remainingTime() == -1) //timer stopped
+        snowpeashooterRect->hide();
+    else
+        snowpeashooterRect->show();
+
+    //Chomper countdown
+    if(chomperTimer->remainingTime() == -1) //timer stopped
+        chomperRect->hide();
+    else
+        chomperRect->show();
+
+    //Potatomine countdown
+    if(potatomineTimer->remainingTime() == -1) //timer stopped
+        potatomineRect->hide();
+    else
+        potatomineRect->show();
+}
+
+void GameScreen::peashooterCountdown()
+{
+    peashooterCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    peashooterTimer->stop();
+}
+
+void GameScreen::sunflowerCountdown()
+{
+    sunflowerCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    sunflowerTimer->stop();
+
+}
+
+void GameScreen::cherrybombCountdown()
+{
+    cherrybombCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    cherrybombTimer->stop();
+}
+
+void GameScreen::walnutCountdown()
+{
+    walnutCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    walnutTimer->stop();
+}
+
+void GameScreen::repeaterCountdown()
+{
+    repeaterCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    repeaterTimer->stop();
+}
+
+void GameScreen::chomperCountdown()
+{
+    chomperCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    chomperTimer->stop();
+}
+
+void GameScreen::snowpeashooterCountdown()
+{
+    snowpeashooterCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    snowpeashooterTimer->stop();
+}
+
+void GameScreen::potatomineCountdown()
+{
+    potatomineCard->setFlag(QGraphicsItem::ItemIsSelectable);
+    potatomineTimer->stop();
 }
 

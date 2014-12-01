@@ -43,6 +43,7 @@ private:
     static QString userName;  //holds user name information
     static QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message
+    void checkForSetUser(); //checks to see if valid username is set
 };
 
 #endif // MAINWINDOW_H

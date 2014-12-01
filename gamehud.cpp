@@ -9,47 +9,14 @@ GameHud::GameHud()
 
     //Adds font to QtFontDataBase
     QFontDatabase::addApplicationFont(":/Font/handWritingFont");
-
-    //Adds all qgraphicsrects to the scene
- //   peashooterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    sunflowerRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    cherrybombRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    walnutRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    chomperRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    repeaterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    potatomineRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-//    snowpeashooterRect = new QGraphicsRectItem(peashooterCard->boundingRect());
-
-
 }
 
 GameHud::~GameHud()
 {
-//    delete peashooterRect;
-//    delete sunflowerRect;
-//    delete cherrybombRect;
-//    delete walnutRect;
-//    delete chomperRect;
-//    delete repeaterRect;
-//    delete potatomineRect;
-//    delete snowpeashooterRect;
+
 }
 
-void GameHud::setPlantCards(QGraphicsPixmapItem *peashooter_card, QGraphicsPixmapItem *sunflower_card,
-                            QGraphicsPixmapItem *cherrybomb_card, QGraphicsPixmapItem *walnut_card,
-                            QGraphicsPixmapItem *repeater_card, QGraphicsPixmapItem *chomper_card,
-                            QGraphicsPixmapItem *snowpeashooter_card, QGraphicsPixmapItem *potatomine_card)
-{
-    //Copying address location of each pointer to coreesponding QGraphicsPixmapItem
-    peashooterCard = peashooter_card;
-    sunflowerCard = sunflower_card;
-    cherrybombCard = cherrybomb_card;
-    walnutCard = walnut_card;
-    repeaterCard = repeater_card;
-    chomperCard = chomper_card;
-    snowpeashooterCard = snowpeashooter_card;
-    potatomineCard = potatomine_card;
-}
+
 
 QRectF GameHud::boundingRect() const
 {
@@ -84,7 +51,3 @@ void GameHud::advance(int phase)
     }
 }
 
-void GameHud::cardOverlay()
-{
-
-}

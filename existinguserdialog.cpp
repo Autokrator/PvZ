@@ -1,5 +1,8 @@
 #include "existinguserdialog.h"
 #include "ui_existinguserdialog.h"
+#include <QDebug>
+#include <vector>
+#include <algorithm>
 
 QString FileName = "/Users/Parth/Documents/QT/RvZ/rvz_players.csv";
 
@@ -9,7 +12,7 @@ ExistingUserDialog::ExistingUserDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     readFromPlayerFile(); //reads the existing users on file
-    inputUser = "Guest"; //default username
+    inputUser = ""; //default username
 }
 
 ExistingUserDialog::~ExistingUserDialog()
@@ -93,7 +96,7 @@ void ExistingUserDialog::on_selectButton_clicked()
 
         //Gets the level for the selected user based on index in temp_list
         if(inputUser == temp_list.at(1))
-            userLevel = temp_list.at(2).split(',').at(0); //removes extra ',' after level
+            userLevel = temp_list.at(2); //get level information for selected user
     }
 
     username_file.close(); //closes file
@@ -119,7 +122,7 @@ void ExistingUserDialog::readFromPlayerFile()
         playerList.append(read_users.readLine());
 
     //Loop start at the end of playerList so latest timestamps are displayed first
-    for(int i = 0; i < playerList.size(); i++)
+    for(int i = playerList.size()-1; i >= 0; i--)
     {
         //Creates a temporary list to hold pieces of each line from player file
         QStringList temp_list;

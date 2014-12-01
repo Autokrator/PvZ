@@ -3,7 +3,7 @@
 #include <QDebug>
 
 //Default user and level information
-QString MainWindow::userName = "Guest";
+QString MainWindow::userName = "";
 QString MainWindow::userLevel = "1";
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Displays current user and level information
     ui->statusBar->showMessage(getStatusMessage());
+
+    //Checks username
+    checkForSetUser();
 
     //Displays PvZ logo on mainwindow
     QPixmap logo_image(":/Images/logo");
@@ -81,12 +84,15 @@ void MainWindow::deleteGameWindow()
 void MainWindow::deleteNewUserDialog()
 {
     //Ensures username is not reset if dialog is closed
-    if(newUserUi->getUserName() != "Guest")
+    if(newUserUi->getUserName() != "")
     {
         //Takes the user information from the dialog
         userName = newUserUi->getUserName();
+        userLevel = "1";
         ui->statusBar->showMessage(getStatusMessage()); //updates statusbar
     }
+
+    checkForSetUser(); //checks for nondefault username
 
     //Calls the NewUserDialog destructor
     delete newUserUi;
@@ -103,13 +109,15 @@ void MainWindow::changeButtonState(bool change)
 void MainWindow::deleteExistUserDialog()
 {
     //Ensures username is not reset if dialog is closed
-    if(existUserUi->getUsername() != "Guest")
+    if(existUserUi->getUsername() != "")
     {
         //Takes the user and level information from dialog
         userName = existUserUi->getUsername();
         userLevel = existUserUi->getLevel();
         ui->statusBar->showMessage(getStatusMessage()); //updates statusbar
     }
+
+    checkForSetUser(); //checks for nondefault username
 
     //Calls the ExistingUserDialog destructor
     delete existUserUi;
@@ -124,4 +132,13 @@ QString MainWindow::getStatusMessage()
     status_message = status_message.leftJustified(36, ' ') + "Level: " + userLevel;
 
     return status_message;
+}
+
+void MainWindow::checkForSetUser()
+{
+    //Username empty results in Start button being inactive
+    if(userName == "")
+        ui->startButton->setEnabled(false);
+    else
+        ui->startButton->setEnabled(true);
 }

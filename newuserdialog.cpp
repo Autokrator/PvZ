@@ -9,7 +9,7 @@ NewUserDialog::NewUserDialog(QWidget *parent) :
     ui(new Ui::NewUserDialog)
 {
     ui->setupUi(this);
-    inputUserName = "Guest"; //Default username
+    inputUserName = ""; //Default username
 }
 
 NewUserDialog::~NewUserDialog()
@@ -26,12 +26,13 @@ QString NewUserDialog::getUserName() const
 void NewUserDialog::on_okButton_clicked()
 {
     //gets the text present in line edit when ok button is clicked
-    inputUserName = ui->lineEdit->text();
+    QString temp_username;
+    temp_username = ui->lineEdit->text();
 
     //Converting QString to QByteArray of char
-    QByteArray username_array = inputUserName.toLatin1();
+    QByteArray username_array = temp_username.toLatin1();
 
-    for(int i = 0; i < inputUserName.length(); i++)
+    for(int i = 0; i < temp_username.length(); i++)
     {
         //Comparing ascii values of each character in array with valid ones
         //Also checks if inputted string is not larger than 10
@@ -40,25 +41,26 @@ void NewUserDialog::on_okButton_clicked()
            (username_array.at(i) > 47 && username_array.at(i) < 58)) ||
            (inputUserName.length() > 10))
         {
-            //Displays warning and sets username to default (guest)
+            //Displays warning and sets username to default
             QMessageBox::warning(this, tr("Invalid Username"), tr("Entered username is invalid! No new user created."),
                                  QMessageBox::Ok);
-            inputUserName = "Guest";
+            inputUserName = "";
 
             //Closes dialog after warning message closes
             close();
             break;   //breaks out of loop
         }
-        else if(i == inputUserName.length() - 1)
+        else if(i == temp_username.length() - 1)
         {
             //Displays conformation message
             QMessageBox::StandardButton answer;
             answer = QMessageBox::question(this, tr("Confirm username"), "Are you sure you sure you want to create user with name: "
-                                           + inputUserName + "?", QMessageBox::Yes|QMessageBox::No);
+                                           + temp_username + "?", QMessageBox::Yes|QMessageBox::No);
 
             //Closes the dialog if yes is chosen
             if(answer == QMessageBox::Yes)
             {
+                inputUserName = temp_username;
                 //Saves the new player info to rvz_players.csv
                 writeToPlayerFile("/Users/Parth/Documents/QT/RvZ/rvz_players.csv");
                 close(); //calls the destructor for dialog
@@ -83,8 +85,8 @@ void NewUserDialog::writeToPlayerFile(QString file_name)
         write_users << playerList.at(i) << "\n"; //Rewrites previous players
 
     //Writes new player with timestamp and level
-    write_users << QDateTime::currentDateTime().toString("[yyyyMMddhhmmss]:")
-                << inputUserName << ":1,\n"; //":1" because all new players start at level 1
+    write_users << QDateTime::currentDateTime().toString("yyyyMMddhhmmss:")
+                << inputUserName << ":1\n"; //":1" because all new players start at level 1
 
     //closes file
     username_file.close();
