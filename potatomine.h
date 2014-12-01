@@ -7,6 +7,7 @@ class Potatomine : public Plant
 public:
     Potatomine(QRect* lawn_tile = 0);
     ~Potatomine();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap* potatomineImage; //holds potatomine pixmap
     QPixmap* explosionImage;  //holds explosion pixmap

@@ -7,6 +7,7 @@ class Walnut : public Plant
 public:
     Walnut(QRect *plant_row = 0);
     ~Walnut();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap *walnutImage; //holds walnut pixmap
 

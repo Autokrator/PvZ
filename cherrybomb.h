@@ -7,6 +7,7 @@ class Cherrybomb : public Plant
 public:
     Cherrybomb(QRect* lawn_tile = 0);
     ~Cherrybomb();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap* cherrybombImage; //holds cherrybomb pixmap
     QPixmap* explosionImage; //holds explosion pixmap

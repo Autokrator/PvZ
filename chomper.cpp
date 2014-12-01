@@ -2,6 +2,8 @@
 #include "zombie.h"
 #include <QDebug>
 
+int Chomper::seedingTime = 7500;
+
 Chomper::Chomper(QRect *lawn_tile)
 {
     //chomper properties

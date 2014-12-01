@@ -9,6 +9,7 @@ public:
     //Takes in a QRect row that gives information about plant location
     Peashooter(QRect *plant_row = 0, bool is_snowpea = false);
     ~Peashooter();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap *peashooterImage; //holds current pixmap representation of plant
     QRect activeRow; //the effective range of peashooter

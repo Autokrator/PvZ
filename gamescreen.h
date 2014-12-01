@@ -54,6 +54,7 @@ private:
                                  0 = default, 1 = peashooter, 2 = sunflower... 8*/
     void closeEvent(QCloseEvent *event); //Custom function for when window is closed (Quit button)
     void mousePressEvent(QMouseEvent *e); //Custom function for mouse click events
+    void mouseMoveEvent(QMouseEvent *e); //Custom function for mouse movement
     void addPlant(int m_x, int m_y); //Takes care of planting on the lawn
     void setDefaultCursor(); //Sets the mouse to a default cursor
 
@@ -67,12 +68,22 @@ private:
     QGraphicsPixmapItem *snowpeashooterCard;
     QGraphicsPixmapItem *potatomineCard;
 
+    QTimer *peashooterTimer;
+    QTimer *sunflowerTimer;
+    QTimer *cherrybombTimer;
+    QTimer *walnutTimer;
+    QTimer *repeaterTimer;
+    QTimer *chomperTimer;
+    QTimer *snowpeashooterTimer;
+    QTimer *potatomineTimer;
+
 signals:
     void showMainWindow(); //Signals to show mainwindow (menu)
     void deleteGameWindow(); //Signals the mainwindow to delte gameWindow object
 
 private slots:
     void spawnSun(); //Connected to sunSpawnTimer, used to spawn new suns
+    void checkSunPoints(); //Check sunpoints and adjusts plant selection cards accordingly
 
 };
 

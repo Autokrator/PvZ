@@ -2,7 +2,7 @@
 #include <QDebug>
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent), sunSpawnInterval(500), playerName("Guest"), playerLevel("1"),
+    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
     mouseCursor(0)
 {
     //Makes a graphics view of following size
@@ -91,13 +91,28 @@ GameScreen::GameScreen(QWidget *parent) :
 
     /*End of adding selectable cards to scene*/
 
+    //Adding all plants' seeding timers
+    peashooterTimer = new QTimer(this);
+    sunflowerTimer = new QTimer(this);
+    cherrybombTimer = new QTimer(this);
+    walnutTimer = new QTimer(this);
+    repeaterTimer = new QTimer(this);
+    chomperTimer = new QTimer(this);
+    snowpeashooterTimer = new QTimer(this);
+    potatomineTimer = new QTimer(this);
+
     //Adds dynamic hud elements
     Hud = new GameHud;
     scene->addItem(Hud);
 
+    //Adding all plant selection card address location to the Hud
+    Hud->setPlantCards(peashooterCard,sunflowerCard,cherrybombCard,walnutCard,
+                       repeaterCard,chomperCard,snowpeashooterCard,potatomineCard);
+
     //Refresh rate of 20 ms
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),scene,SLOT(advance()));
+    connect(timer,SIGNAL(timeout()),this,SLOT(checkSunPoints()));
     timer->start(20);
 
     //Spawns new sun every 10 seconds
@@ -129,16 +144,6 @@ GameScreen::GameScreen(QWidget *parent) :
         }
     }
 
-    for(int i = 0; i < 1; i++)
-    {
-        QRect temp_rect(lawnVector[4][0].topX,lawnVector[4][0].topY,720,96);
-        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_rect);
-        scene->addItem(zombie);
-    }
-
-    QRect temp_rect(lawnVector[0][0].topX,lawnVector[0][0].topY,80,96);
-    LawnMower *lawn_mower = new LawnMower(&temp_rect,(int)scene->width());
-    scene->addItem(lawn_mower);
 }
 
 GameScreen::~GameScreen()
@@ -220,7 +225,6 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
     else if(sunflowerCard->isSelected() && Sun::getSunPoints() >= 50)
     {
         mouseState = 2; //Gives permission to plant sunflower
-
         //Changes mouse cursor to reflect clicked plant
         delete mouseCursor;
         mouseCursor = new QCursor(QPixmap(":/Images/sunflowerGray"));
@@ -349,7 +353,7 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         //Leaves function
         return;
     }
-    else if(potatomineCard->isSelected() && Sun::getSunPoints() >= 50)
+    else if(potatomineCard->isSelected() && Sun::getSunPoints() >= 25)
     {
         mouseState = 8; //Gives permission to potatomine
 
@@ -376,6 +380,33 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
         //Checks if user clicked to plant
         addPlant(e->x(),e->y());
     }
+}
+
+void GameScreen::mouseMoveEvent(QMouseEvent *e)
+{
+    QGraphicsView::mouseMoveEvent(e);
+
+    //Displays tooltip information for each plant selection card
+    if(peashooterCard->isUnderMouse())
+    {
+        this->setToolTip("Pea Shooter\n Cost: 100");
+    }
+    else if(sunflowerCard->isUnderMouse())
+        this->setToolTip("Sun Flower\n Cost: 50");
+    else if(walnutCard->isUnderMouse())
+        this->setToolTip("Wall Nut\n Cost: 50");
+    else if(cherrybombCard->isUnderMouse())
+        this->setToolTip("Cherry Bomb\n Cost: 150");
+    else if(chomperCard->isUnderMouse())
+        this->setToolTip("Chomper\n Cost: 150");
+    else if(snowpeashooterCard->isUnderMouse())
+        this->setToolTip("Snowpea Shooter\n Cost: 175");
+    else if(repeaterCard->isUnderMouse())
+        this->setToolTip("Repeater\n Cost: 200");
+    else if(potatomineCard->isUnderMouse())
+        this->setToolTip("Potato Mine\n Cost: 25");
+    else
+        this->setToolTip("");
 }
 
 void GameScreen::addPlant(int m_x, int m_y)
@@ -548,5 +579,86 @@ void GameScreen::spawnSun()
     //Spawns a new type 1 sun
     sun = new Sun;
     scene->addItem(sun);
+}
+
+void GameScreen::checkSunPoints()
+{
+    if(Sun::getSunPoints() < 25)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCardGray"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCardGray"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCardGray"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCardGray"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCardGray"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCardGray"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCardGray"));
+    }
+    else if(Sun::getSunPoints() < 50)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCardGray"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCardGray"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCardGray"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCardGray"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCardGray"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCardGray"));
+    }
+    else if(Sun::getSunPoints() < 100)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCardGray"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCard"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCardGray"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCard"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCardGray"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCardGray"));
+    }
+    else if(Sun::getSunPoints() < 150)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCard"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCard"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCardGray"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCard"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCardGray"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCardGray"));
+    }
+    else if(Sun::getSunPoints() < 175)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCard"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCard"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCard"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCard"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCard"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCardGray"));
+    }
+    else if(Sun::getSunPoints() < 200)
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCard"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCard"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCard"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCard"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCardGray"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCard"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCard"));
+    }
+    else
+    {
+        peashooterCard->setPixmap(QPixmap(":/Images/peashooterCard"));
+        sunflowerCard->setPixmap(QPixmap(":/Images/sunflowerCard"));
+        cherrybombCard->setPixmap(QPixmap(":/Images/cherrybombCard"));
+        walnutCard->setPixmap(QPixmap(":/Images/walnutCard"));
+        repeaterCard->setPixmap(QPixmap(":/Images/repeaterCard"));
+        chomperCard->setPixmap(QPixmap(":/Images/chomperCard"));
+        potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCard"));
+    }
 }
 

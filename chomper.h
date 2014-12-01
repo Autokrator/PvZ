@@ -7,6 +7,7 @@ class Chomper : public Plant
 public:
     Chomper(QRect *lawn_tile = 0);
     ~Chomper();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap *chomperImage; //holds chompher pixmap
     QPixmap *chomperEatingImage; //holds chomper eating pixmap

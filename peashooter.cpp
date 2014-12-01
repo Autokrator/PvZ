@@ -2,12 +2,15 @@
 #include <QDebug>
 #include "zombie.h"
 
+int Peashooter::seedingTime = 7500;
+
 Peashooter::Peashooter(QRect *plant_row, bool is_snowpea)
 {
     /*is_snowpea = true, snowpea is being spawned
      * is_snowpea = false, normal peashooter is being spawned*/
 
     //peashooter properties
+    seedingTime = 7500;
     life = 10;
     plantDamage = 1;
     fireRate = 1500;

@@ -1,5 +1,7 @@
 #include "repeater.h"
 
+int Repeater::seedingTime = 7500;
+
 Repeater::Repeater(QRect *plant_row)
 {
     //repeater properties

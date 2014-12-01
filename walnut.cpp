@@ -1,5 +1,7 @@
 #include "walnut.h"
 
+int Walnut::seedingTime = 30000;
+
 Walnut::Walnut(QRect *plant_row)
 {
     //walnut properties

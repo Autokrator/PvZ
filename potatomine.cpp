@@ -1,6 +1,8 @@
 #include "potatomine.h"
 #include "zombie.h"
 
+int Potatomine::seedingTime = 30000;
+
 Potatomine::Potatomine(QRect *lawn_tile)
 {
     //potatomine properties

@@ -46,6 +46,14 @@
         <file alias="bucketheadSlowed">RvZ_assests/zombie_buckethead_slowed.png</file>
         <file alias="buckethead">RvZ_assests/zombie_buckethead.png</file>
         <file alias="lawnMower">RvZ_assests/Lawn_Mower.png</file>
+        <file alias="cherrybombCardGray">RvZ_assests/cherryBomb_card_gray.png</file>
+        <file alias="chomperCardGray">RvZ_assests/chomper_card_gray.png</file>
+        <file alias="peashooterCardGray">RvZ_assests/peashooter_card_gray.png</file>
+        <file alias="potatomineCardGray">RvZ_assests/potatoMine_card_gray.png</file>
+        <file alias="repeaterCardGray">RvZ_assests/repeater_card_gray.png</file>
+        <file alias="snowpeaCardGray">RvZ_assests/snowPea_card_gray.png</file>
+        <file alias="sunflowerCardGray">RvZ_assests/sunflower_card_gray.png</file>
+        <file alias="walnutCardGray">RvZ_assests/walnut_card_gray.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

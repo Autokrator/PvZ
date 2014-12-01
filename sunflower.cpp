@@ -1,5 +1,7 @@
 #include "sunflower.h"
 
+int Sunflower::seedingTime = 7500;
+
 Sunflower::Sunflower(QRect *plant_row)
 {
     //sunflower properties

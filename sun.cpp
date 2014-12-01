@@ -127,7 +127,7 @@ void Sun::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Sun::move(double time)
 {
     //Appropriate move is applied based on type of sun
-    if(this->y() <= yLand && type == 1) //Moves until sun lands on lawn
+    if(this->y() <= yLand && type == 1) //Moves until sun lands on yLand
     {
         //Calculates the new y coordinate (falling animation)
         position.setY(position.y() + round(yVelocity*time));

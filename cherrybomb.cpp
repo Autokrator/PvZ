@@ -1,6 +1,8 @@
 #include "cherrybomb.h"
 #include "zombie.h"
 
+int Cherrybomb::seedingTime = 50000;
+
 Cherrybomb::Cherrybomb(QRect *lawn_tile)
 {
     //cherrybomb properties

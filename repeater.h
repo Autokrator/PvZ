@@ -8,6 +8,7 @@ class Repeater : public Plant
 public:
     Repeater(QRect *plant_row = 0);
     ~Repeater();
+    static int seedingTime; //cool down period after placing a plant
 private:
     QPixmap *repeaterImage; //holds repeater pixmap
     Bullet *bullet; //holds bullet object when repeater fires
