@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 
-int Sun::sunPoints = 1500; //Starting sunPoints
+int Sun::sunPoints = 0; //Starting sunPoints
 bool Sun::isPaused = false; //Starting state
 
 Sun::Sun() : timeout(7500)

@@ -16,7 +16,7 @@ FlagZombie::FlagZombie(QRect *spawn_row)
     zombieLife = 10;
     damage = 1;
     attackRate = 500;
-    xVelocity = 10;
+    xVelocity = 0.45;
 
     attackCounter = new QTime;
 

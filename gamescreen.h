@@ -56,6 +56,7 @@ private:
     void mouseMoveEvent(QMouseEvent *e); //Custom function for mouse movement
     void addPlant(int m_x, int m_y); //Takes care of planting on the lawn
     void setDefaultCursor(); //Sets the mouse to a default cursor
+    void save();             //Saves the progress of current user
 
     //Plant selection cards used to know which plant is selected or can be selected
     //QGraphicsRect Item that cover corresponding card while seeding timer is counting down

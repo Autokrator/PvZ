@@ -689,6 +689,33 @@ void GameScreen::setDefaultCursor()
     this->setCursor(*mouseCursor);
 }
 
+void GameScreen::save()
+{
+    //Finds the level the user is now going to be on
+    QString new_level = QString::number(MainWindow::userLevel.toInt() + 1);
+    QFile username_file("/Users/Parth/Documents/QT/RvZ/rvz_players.csv");
+    QString final_text;
+
+    //Displays warning if file is not writable
+    if(!username_file.open(QIODevice::ReadWrite|QIODevice::Text))
+        QMessageBox::warning(this,tr("Error!"),tr("Error with rvz_players.csv! No new user created"),
+                                     QMessageBox::Ok);
+    QTextStream modifier(&username_file);
+
+    while(!modifier.atEnd())
+    {
+        QString temp = modifier.readLine().split(':').at(1);
+        if(temp != MainWindow::userName)
+            final_text.append(modifier.readLine() + '\n');
+        else
+            final_text.append("");
+    }
+
+    modifier << final_text << QDateTime::currentDateTime().toString("yyyyMMddhhmmss:")
+             << MainWindow::userName << ':' << new_level << '\n';
+    username_file.close();
+}
+
 void GameScreen::loadLevel()
 {
     QString file_name("/Users/Parth/Documents/QT/RvZ/rvz_levels.csv");
@@ -998,7 +1025,10 @@ void GameScreen::checkSunPoints()
         response = QMessageBox::information(this,"Win","Congratulations! You beat the level.",QMessageBox::Ok);
 
         if(response == QMessageBox::Ok)
+        {
+            save();
             levelWin(true);
+        }
     }
     else if(Zombie::zombiesAlive != 0 && Zombie::zombiesWin) //case where zombies win
     {

@@ -9,7 +9,7 @@ Potatomine::Potatomine(QRect *lawn_tile)
     life = 4;
     cost = 150;
     plantDamage = 90;
-    fireRate = 100;
+    fireRate = 15000;
     detonate = false;
 
     //Sets the position of potatomine based on selected lawn_tile
