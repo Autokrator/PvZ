@@ -31,6 +31,12 @@ MainWindow::~MainWindow()
     qDebug() << "ui deleted";
 }
 
+void MainWindow::updateStatusBar()
+{
+    //Displays current user and level information
+    ui->statusBar->showMessage(getStatusMessage());
+}
+
 void MainWindow::on_newUserButton_clicked()
 {
     //Opens new dialog asking for username information

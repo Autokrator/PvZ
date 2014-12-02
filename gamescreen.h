@@ -47,6 +47,7 @@ private:
     Sun *sun; //Used to make a new sun object
 
     GameHud *Hud; //Used to make a hud object to display dynamic informatio
+    QGraphicsPixmapItem *resetButton; //used to restart given level
     QCursor *mouseCursor; //Used to change cursor throughout various game scenarios
     int mouseState; /*Used to indicate plant selection
                                  0 = default, 1 = peashooter, 2 = sunflower... 8*/

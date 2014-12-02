@@ -19,6 +19,8 @@ public:
     ~MainWindow();
     static QString userName;  //holds user name information
     static QString userLevel; //holds level information for active user
+    void updateStatusBar(); //updates status message
+    void checkForSetUser(); //checks to see if valid username is set
 
 private slots:
     void on_newUserButton_clicked();
@@ -45,7 +47,6 @@ private:
     NewUserDialog *newUserUi;
     ExistingUserDialog *existUserUi;
     QString getStatusMessage(); //gets the status message
-    void checkForSetUser(); //checks to see if valid username is set
 };
 
 #endif // MAINWINDOW_H

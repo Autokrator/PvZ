@@ -59,6 +59,7 @@
         <file alias="newspaperzombieAttack">RvZ_assests/Newspaper_Zombie_attack.png</file>
         <file alias="regularzombieAttack">RvZ_assests/regularzombie_attack.png</file>
         <file alias="bucketheadAttack">RvZ_assests/zombie_buckethead_attack.png</file>
+        <file>restart.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

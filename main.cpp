@@ -3,7 +3,7 @@
 #include <QDebug>
 
 bool isLevelFileValid();
-void checkPlayerFile();
+QString checkPlayerFile();
 
 int main(int argc, char *argv[])
 {
@@ -12,11 +12,14 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    checkPlayerFile();
+    MainWindow::userName = checkPlayerFile();
 
     if(isLevelFileValid())
+    {
+        w.updateStatusBar(); //updates status bar
+        w.checkForSetUser(); //Enables start button if valid user
         w.show(); //displays mainwindow
-
+    }
     return a.exec();
 }
 
@@ -36,14 +39,18 @@ bool isLevelFileValid()
         return 1;
 }
 
-void checkPlayerFile()
+QString checkPlayerFile()
 {
     QString file_name = "/Users/Parth/Documents/QT/RvZ/rvz_players.csv";
     QFile user_file(file_name);
+    QString last_user;
 
     //Displays warning if file is not readable and exits program
     if(!user_file.open(QIODevice::ReadWrite|QIODevice::Text))
-        return;
+    {
+        MainWindow::userLevel = "1";
+        return "";
+    }
     else
     {
         QTextStream verifier(&user_file);
@@ -87,10 +94,15 @@ void checkPlayerFile()
                     goto close; //goes to close flag
                 }
             }
+
+            last_user = temp.at(1);
+            MainWindow::userLevel = temp.at(2);
         }
 
     close: //closes file
     user_file.close();
+
+    return last_user;
 
     }
 }

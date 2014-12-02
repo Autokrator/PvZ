@@ -1,6 +1,8 @@
 #include "gamescreen.h"
 #include <QDebug>
 #include "mainwindow.h"
+#include <QSpacerItem>
+#include <QGridLayout>
 
 GameScreen::GameScreen(QWidget *parent) :
     QGraphicsView(parent), sunSpawnInterval(10000),
@@ -195,6 +197,12 @@ GameScreen::GameScreen(QWidget *parent) :
 
     //Trigger to spawn first zombie
     spawnFirstZombie->start(startTime);
+
+    //Adds restart button
+    resetButton = new QGraphicsPixmapItem(QPixmap(":/Images/restart.png"));
+    resetButton->setPos(potatomineRect->x()+100,potatomineRect->y());
+    resetButton->setFlag(QGraphicsItem::ItemIsSelectable);
+    scene->addItem(resetButton);
 }
 
 GameScreen::~GameScreen()
@@ -222,17 +230,21 @@ void GameScreen::closeEvent(QCloseEvent *event)
 
     //Asks user if they want to exit the level
     QMessageBox exit_message;
-    exit_message.setText(tr("Are you sure you want to leave this level?"));
-    exit_message.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+    QSpacerItem* horizontalSpacer = new QSpacerItem(560,288, QSizePolicy::Minimum, QSizePolicy::Maximum);
+    exit_message.setText( "Are you sure you want to quit this level?" );
+    exit_message.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    QGridLayout* layout = (QGridLayout*)exit_message.layout();
+    layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
 
-    if(exit_message.exec() == exit_message.Ok) //If yes is selected
+    int result = exit_message.exec();
+    if(result == exit_message.Yes) //If yes is selected
     {
         deleteGameWindow(); //Signals to delete gamewindow
         event->accept(); //closes game window
         showMainWindow(); //signals to display main window
 
     }
-    else //If cancel is selected or window is closed
+    else if(result == exit_message.No) //If cancel is selected or window is closed
     {
         event->ignore(); //resumes game
 
@@ -423,6 +435,37 @@ void GameScreen::mousePressEvent(QMouseEvent *e)
 
         //Leaves function
         return;
+    }
+    else if(resetButton->isSelected())
+    {
+        timer->stop(); // pauses the scene's advance calls
+        int remember_sun_spawn_timer = sunSpawnTimer->remainingTime();
+        sunSpawnTimer->stop(); //Stops new suns from spawning
+
+        Sun::isPaused = true; //Changes state for all suns in the scene
+        scene->advance();   //Advances to allow suns to activate Sun::pause() func
+
+        //Asks user if they want to exit the level
+        QMessageBox exit_message;
+        QSpacerItem* horizontalSpacer = new QSpacerItem(560,288, QSizePolicy::Minimum, QSizePolicy::Maximum);
+        exit_message.setText( "Are you sure you want to restart?" );
+        exit_message.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+        QGridLayout* layout = (QGridLayout*)exit_message.layout();
+        layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
+
+        int result = exit_message.exec();
+        if(result == exit_message.Yes) //If yes is selected
+        {
+            levelWin(false);
+        }
+        else if(result == exit_message.No) //If cancel is selected or window is closed
+        {
+            Sun::isPaused = false; //Changes back the state for all suns in the scene
+            timer->start(20); //reactivates the advance and timeout() connection
+
+            //Sun spawn timer interval is the remaining time from pause
+            sunSpawnTimer->start(remember_sun_spawn_timer);
+        }
     }
     else if(mouseState != 0)
     {
