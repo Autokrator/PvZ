@@ -3,7 +3,7 @@
 
 NewspaperZombie::NewspaperZombie(QRect *spawn_row)
 {
-    xCordinate = 700;
+    xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -36,8 +36,6 @@ QRectF NewspaperZombie::boundingRect() const
 
 void NewspaperZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(boundingRect());
-
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
     if(!isSlowed)
         painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
@@ -63,6 +61,20 @@ void NewspaperZombie::advance(int phase)
     }
     else if(equipmentLife <= 0)
         xVelocity = 1;
+
+    //change zombie image if zombie is attacking
+    if(isAttacking)
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/newspaperzombieAttack");
+        update();
+    }
+    else
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/newspaperzombie");
+        update();
+    }
 
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
@@ -92,10 +104,14 @@ void NewspaperZombie::move()
                 {
                     attack(item);
                     attackCounter->restart(); //restarts counter
+                    isAttacking = true;
                 }
             }
             else if(!item->isTargetable)
+            {
                 xCordinate -= xVelocity;
+                isAttacking = false;
+            }
 
             return;
         }
@@ -111,4 +127,5 @@ void NewspaperZombie::move()
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+    isAttacking = false;
 }

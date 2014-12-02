@@ -6,9 +6,11 @@ class Zombie : public QGraphicsItem
 {
 public:
     Zombie();
+    ~Zombie();
     void decreaseLife(int value); //Decreases the total health of zombie based on value
     void setSlowEffect(); //decreases the current velocity of zombie by 50% and sets isSlowed as true
     bool getSlowStatus() const; //retunr isSlowed status condition of zombie
+    static int zombiesAlive; //monitors how many zombies are alive at any given moment
 
 protected:
     double xCordinate; //x coordinate of zombie

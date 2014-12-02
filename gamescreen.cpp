@@ -3,7 +3,7 @@
 
 GameScreen::GameScreen(QWidget *parent) :
     QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
-    mouseCursor(0)
+    mouseCursor(0), lastZombieSpawned(false)
 {
     //Makes a graphics view of following size
     this->setFixedHeight(760);
@@ -183,6 +183,17 @@ GameScreen::GameScreen(QWidget *parent) :
     //Load level elements
     loadLevel();
 
+    //Setting up zombie spawn timers
+    spawnFirstZombie = new QTimer(this);
+    spawnNextZombie = new QTimer(this);
+    zombieSquenceTime = startingInterval;
+
+    //Connecting zombie spawn timer
+    connect(spawnFirstZombie, SIGNAL(timeout()),this,SLOT(startZombieSpawning()));
+    connect(spawnNextZombie,SIGNAL(timeout()),this,SLOT(spawnZombie()));
+
+    //Trigger to spawn first zombie
+    spawnFirstZombie->start(startTime);
 }
 
 GameScreen::~GameScreen()
@@ -450,7 +461,18 @@ void GameScreen::mouseMoveEvent(QMouseEvent *e)
 
 void GameScreen::addPlant(int m_x, int m_y)
 {
-    for(int i = 0; i < (int)lawnVector.size(); i++)
+    //Uses activeRows to only allow planting on active rows
+    int start_row(0), end_row;
+    if(activeRows == 1) // middle row active
+        start_row = 2;
+    else if(activeRows == 3) //middle 3 rows active
+        start_row = 1;
+    else if(activeRows == 5) //all rows active
+        start_row = 0;
+
+    end_row = start_row + activeRows;
+
+    for(int i = start_row; i < end_row; i++)
     {
         for(int j = 0; j < (int)lawnVector.at(i).size(); j++)
         {
@@ -597,7 +619,6 @@ void GameScreen::addPlant(int m_x, int m_y)
                     potatomineTimer->start(Potatomine::seedingTime);
                     goto reset;
                 }
-
             }
         }
     }
@@ -654,9 +675,9 @@ void GameScreen::loadLevel()
             //Extracts level information from file
             zombieSequence = temp_list.at(1).split(',');
             activeRows = temp_list.at(2).toInt();
-            startTime = temp_list.at(3).toDouble();
-            startingInterval = temp_list.at(4).toDouble();
-            intervalDecrement = temp_list.at(5).toDouble();
+            startTime = temp_list.at(3).toDouble()*1000; //changing to ms
+            startingInterval = temp_list.at(4).toDouble()*1000;
+            intervalDecrement = temp_list.at(5).toDouble()*1000;
 
             goto close;
         }
@@ -693,14 +714,30 @@ void GameScreen::loadLevel()
     }
 
     //Adding dead zones to the lawn to show inactive lanes
-    if(activeRows == 5)
-        return;
-
     //Creating inactive rects to use for drawing
     QRect inactive_area_1;
     QRect inactive_area_2;
 
-    activeRows = 3;
+    //Used to create lawnmowers
+    LawnMower *lawnmower;
+
+    if(activeRows == 5)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            //Adding lawn mowers to active rows
+            QRect tile; //tile where lawnmower spawns
+            tile.setX(lawnVector[i][0].topX);
+            tile.setY(lawnVector[i][0].topY);
+            tile.setWidth(lawn_plot_width);
+            tile.setHeight(lawn_plot_height);
+
+            lawnmower = new LawnMower(&tile,scene->width());
+            scene->addItem(lawnmower);
+        }
+
+        return;
+    }
     if(activeRows == 1)
     {
         //Top 2 rows
@@ -714,6 +751,16 @@ void GameScreen::loadLevel()
         inactive_area_2.setY(lawnVector[3][0].topY);
         inactive_area_2.setWidth(lawn_plot_width*9);
         inactive_area_2.setHeight(lawn_plot_height*2);
+
+        //Adding lawn mowers to active rows
+        QRect tile; //tile where lawnmower spawns
+        tile.setX(lawnVector[2][0].topX);
+        tile.setY(lawnVector[2][0].topY);
+        tile.setWidth(lawn_plot_width);
+        tile.setHeight(lawn_plot_height);
+
+        lawnmower = new LawnMower(&tile,scene->width());
+        scene->addItem(lawnmower);
     }
     else if(activeRows == 3)
     {
@@ -728,9 +775,22 @@ void GameScreen::loadLevel()
         inactive_area_2.setY(lawnVector[4][0].topY);
         inactive_area_2.setWidth(lawn_plot_width*9);
         inactive_area_2.setHeight(lawn_plot_height);
+
+        for(int i = 1; i < 4; i++)
+        {
+            //Adding lawn mowers to active rows
+            QRect tile; //tile where lawnmower spawns
+            tile.setX(lawnVector[i][0].topX);
+            tile.setY(lawnVector[i][0].topY);
+            tile.setWidth(lawn_plot_width);
+            tile.setHeight(lawn_plot_width);
+
+            lawnmower = new LawnMower(&tile,scene->width());
+            scene->addItem(lawnmower);
+        }
     }
 
-    //Creates visual representation on scene
+    //Creates visual representation on scene of dead zones
     QGraphicsRectItem *deadArea = new QGraphicsRectItem(inactive_area_1);
     deadArea->setPen(QPen(Qt::transparent));
     deadArea->setBrush(QBrush(QColor(139,69,19)));
@@ -839,7 +899,7 @@ void GameScreen::checkSunPoints()
         repeaterCard->setPixmap(QPixmap(":/Images/repeaterCard"));
         chomperCard->setPixmap(QPixmap(":/Images/chomperCard"));
         potatomineCard->setPixmap(QPixmap(":/Images/potatomineCard"));
-        snowpeashooterCard->setPixmap(QPixmap(":Images/snowpeaCard"));
+        snowpeashooterCard->setPixmap(QPixmap(":/Images/snowpeaCard"));
     }
 
     //Peashooter countdown
@@ -847,7 +907,6 @@ void GameScreen::checkSunPoints()
         peashooterRect->hide();
     else
         peashooterRect->show();
-
 
     //Sunflower countdown
     if(sunflowerTimer->remainingTime() == -1) //timer stopped
@@ -890,6 +949,21 @@ void GameScreen::checkSunPoints()
         potatomineRect->hide();
     else
         potatomineRect->show();
+
+    if(lastZombieSpawned && Zombie::zombiesAlive == 0)
+    {
+        playerLevel = QString::number(playerLevel.toInt() + 1);
+
+        QMessageBox::StandardButton response;
+        response = QMessageBox::information(this,"Win","Congratulations! You beat the level.",QMessageBox::Ok);
+
+        if(response == QMessageBox::Ok)
+        {
+            loadLevel();
+            levelWin(true);
+        }
+    }
+
 }
 
 void GameScreen::peashooterCountdown()
@@ -939,5 +1013,112 @@ void GameScreen::potatomineCountdown()
 {
     potatomineCard->setFlag(QGraphicsItem::ItemIsSelectable);
     potatomineTimer->stop();
+}
+
+void GameScreen::startZombieSpawning()
+{
+    int lawn_width = 720;
+    int lawn_tile_height = 96;
+    int zombie_type = zombieSequence.at(0).toInt();
+    int random_row;
+
+    if(activeRows == 1)
+         random_row = 2;
+    else if(activeRows == 3)
+        random_row = qrand()%3 + 1;
+    else
+        random_row = qrand()%5;
+
+    QRect temp_spawn_row(lawnVector[random_row][0].topX,lawnVector[random_row][0].topY,
+                         lawn_width,lawn_tile_height);
+    if(zombie_type == 1)
+    {
+        RegularZombie *zombie = new RegularZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 2)
+    {
+        FlagZombie *zombie = new FlagZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 3)
+    {
+        ConeHeadZombie *zombie = new ConeHeadZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 4)
+    {
+        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 5)
+    {
+        NewspaperZombie *zombie = new NewspaperZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+
+    //Starts chain to spawn rest of zombie with decreasing zombieSequenceTime
+    spawnFirstZombie->stop();
+    spawnNextZombie->start(zombieSquenceTime);
+}
+
+void GameScreen::spawnZombie()
+{
+    spawnNextZombie->stop();
+
+    static int i = 1; //Remembers where in the zombie sequence current call is
+    int lawn_width = 720;
+    int lawn_tile_height = 96;
+    int zombie_type = 0;
+
+    if(i < zombieSequence.length())
+        zombie_type = zombieSequence.at(i).toInt();
+    else
+    {
+        spawnNextZombie->stop();
+        lastZombieSpawned = true;
+        return;
+    }
+
+    int random_row;
+
+    if(activeRows == 1)
+         random_row = 2;
+    else if(activeRows == 3)
+        random_row = qrand()%3 + 1;
+    else
+        random_row = qrand()%5;
+
+    QRect temp_spawn_row(lawnVector[random_row][0].topX,lawnVector[random_row][0].topY,
+                         lawn_width,lawn_tile_height);
+    if(zombie_type == 1)
+    {
+        RegularZombie *zombie = new RegularZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 2)
+    {
+        FlagZombie *zombie = new FlagZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 3)
+    {
+        ConeHeadZombie *zombie = new ConeHeadZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 4)
+    {
+        BucketHeadZombie *zombie = new BucketHeadZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+    else if(zombie_type == 5)
+    {
+        NewspaperZombie *zombie = new NewspaperZombie(&temp_spawn_row);
+        scene->addItem(zombie);
+    }
+
+    i++; //increament static variable
+    zombieSquenceTime -= intervalDecrement; //decrease next spawn interval by decrement
+    spawnNextZombie->start(zombieSquenceTime); //start timer again
 }
 

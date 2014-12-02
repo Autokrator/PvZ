@@ -3,7 +3,7 @@
 
 BucketHeadZombie::BucketHeadZombie(QRect *spawn_row)
 {
-    xCordinate = spawn_row->x()+spawn_row->width();
+    xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -50,8 +50,22 @@ void BucketHeadZombie::advance(int phase)
         return;
     }
 
-    updateImage();
     move(); //moves zombie based on velocity
+
+    //change zombie image if zombie is attacking
+    if(isAttacking)
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/bucketheadAttack");
+        update();
+    }
+    else
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/buckethead");
+        update();
+    }
+
     this->setPos(xCordinate,yCordinate); //updates pos
 }
 
@@ -80,10 +94,14 @@ void BucketHeadZombie::move()
                 {
                     attack(item);
                     attackCounter->restart(); //restarts counter
+                    isAttacking = true;
                 }
             }
             else if(!item->isTargetable)
+            {
                 xCordinate -= xVelocity;
+                isAttacking = false;
+            }
 
             return;
         }
@@ -99,9 +117,6 @@ void BucketHeadZombie::move()
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+    isAttacking = false;
 }
 
-void BucketHeadZombie::updateImage()
-{
-
-}

@@ -35,6 +35,8 @@ private slots:
 
     void deleteExistUserDialog(); //calls the destructor of existing user dialog
 
+    void levelSucess(bool); //starts next level or restarts level based on result
+
 private:
     Ui::MainWindow *ui;
     GameScreen *gameUi; //game window for when to start the game

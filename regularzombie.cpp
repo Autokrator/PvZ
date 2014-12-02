@@ -36,8 +36,6 @@ QRectF RegularZombie::boundingRect() const
 
 void RegularZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(boundingRect());
-
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
     if(!isSlowed)
         painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
@@ -61,6 +59,20 @@ void RegularZombie::advance(int phase)
     {
         delete this;
         return;
+    }
+
+    //change zombie image if zombie is attacking
+    if(isAttacking)
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/regularzombieAttack");
+        update();
+    }
+    else
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/regularZombie");
+        update();
     }
 
     move(); //moves zombie based on velocity
@@ -89,13 +101,16 @@ void RegularZombie::move()
                 }
                 else if(attackCounter->elapsed() >= attackRate) //attacks every 500 ms
                 {
-                    qDebug()<< attackCounter->elapsed();
                     attack(item);
                     attackCounter->restart(); //restarts counter
+                    isAttacking = true;
                 }
             }
             else if(!item->isTargetable)
+            {
                 xCordinate -= xVelocity;
+                isAttacking = false;
+            }
 
             return;
         }
@@ -111,6 +126,7 @@ void RegularZombie::move()
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+    isAttacking = false;
 
 
 }

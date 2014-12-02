@@ -54,6 +54,11 @@
         <file alias="snowpeaCardGray">RvZ_assests/snowPea_card_gray.png</file>
         <file alias="sunflowerCardGray">RvZ_assests/sunflower_card_gray.png</file>
         <file alias="walnutCardGray">RvZ_assests/walnut_card_gray.png</file>
+        <file alias="coneheadAttack">RvZ_assests/conehead_zombie_attack.png</file>
+        <file alias="flagzombieAttack">RvZ_assests/flag_zombie_attack.png</file>
+        <file alias="newspaperzombieAttack">RvZ_assests/Newspaper_Zombie_attack.png</file>
+        <file alias="regularzombieAttack">RvZ_assests/regularzombie_attack.png</file>
+        <file alias="bucketheadAttack">RvZ_assests/zombie_buckethead_attack.png</file>
     </qresource>
     <qresource prefix="/Font">
         <file alias="handWritingFont">RvZ_assests/gunny_rewritten/gnyrwn971.ttf</file>

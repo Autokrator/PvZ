@@ -31,7 +31,6 @@ QRectF LawnMower::boundingRect() const
 
 void LawnMower::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(boundingRect());
     painter->drawPixmap(boundingRect(),*lawnMowerImage,boundingRect());
 }
 
@@ -45,7 +44,6 @@ void LawnMower::advance(int phase)
     if(this->x() >= sceneEnd)
     {
         delete this;
-        qDebug() << "lm delete";
         return;
     }
 }

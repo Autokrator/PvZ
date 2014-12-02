@@ -1,10 +1,22 @@
 #include "zombie.h"
+#include <QDebug>
+
+int Zombie::zombiesAlive = 0;
 
 Zombie::Zombie()
 {
     //Intially all zombies are not slowed and are not attacking
     isSlowed = false;
     isAttacking = false;
+
+    //Adds one to number of zombies alive
+    zombiesAlive++;
+}
+
+Zombie::~Zombie()
+{
+    --zombiesAlive;
+    qDebug() << zombiesAlive;
 }
 
 void Zombie::decreaseLife(int value)

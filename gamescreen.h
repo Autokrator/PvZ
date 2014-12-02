@@ -88,9 +88,15 @@ private:
     double startingInterval;    //Time till second zombie spawn
     double intervalDecrement;   //The value by which the the starting interval is lowered
                                 // for each successive zombie
+    QTimer *spawnFirstZombie; //Used to spawn first zombie of the level
+    QTimer *spawnNextZombie; //Used to spawn consequent zombies
+    double zombieSquenceTime; //decremented each time a zombie is spawned
+    bool lastZombieSpawned; //used to tell continous monitoring slot "checkSunPoints()" to
+                            // also monitor Zombie::zombiesAlive so when it is 0, level can end
 signals:
     void showMainWindow(); //Signals to show mainwindow (menu)
     void deleteGameWindow(); //Signals the mainwindow to delte gameWindow object
+    void levelWin(bool);
 
 private slots:
     void spawnSun(); //Connected to sunSpawnTimer, used to spawn new suns
@@ -105,6 +111,10 @@ private slots:
     void chomperCountdown();
     void snowpeashooterCountdown();
     void potatomineCountdown();
+
+    //Zombie spawning slots
+    void startZombieSpawning();
+    void spawnZombie();
 
 };
 

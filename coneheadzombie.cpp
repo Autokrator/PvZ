@@ -3,7 +3,7 @@
 
 ConeHeadZombie::ConeHeadZombie(QRect *spawn_row)
 {
-    xCordinate = qrand()%600 + 400;
+    xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
     this->setPos(xCordinate,yCordinate);
@@ -35,8 +35,6 @@ QRectF ConeHeadZombie::boundingRect() const
 
 void ConeHeadZombie::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->drawRect(boundingRect());
-
     //Paints zombie pixmap representation to screen with boundingRect as source and target rect
     if(!isSlowed)
         painter->drawPixmap(boundingRect(),*zombieImage,boundingRect());
@@ -59,6 +57,20 @@ void ConeHeadZombie::advance(int phase)
     {
         delete this;
         return;
+    }
+
+    //change zombie image if zombie is attacking
+    if(isAttacking)
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/coneheadAttack");
+        update();
+    }
+    else
+    {
+        delete zombieImage;
+        zombieImage = new QPixmap(":/Images/conehead");
+        update();
     }
 
     move(); //moves zombie based on velocity
@@ -89,10 +101,14 @@ void ConeHeadZombie::move()
                 {
                     attack(item);
                     attackCounter->restart(); //restarts counter
+                    isAttacking = true;
                 }
             }
             else if(!item->isTargetable)
+            {
                 xCordinate -= xVelocity;
+                isAttacking = false;
+            }
 
             return;
         }
@@ -108,4 +124,5 @@ void ConeHeadZombie::move()
 
     //Updates the x cordinate based on velocity
     xCordinate -= xVelocity;
+    isAttacking = false;
 }

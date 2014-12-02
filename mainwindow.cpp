@@ -59,6 +59,7 @@ void MainWindow::on_startButton_clicked()
     gameUi = new GameScreen;
     connect(gameUi,SIGNAL(showMainWindow()),this,SLOT(show()));
     connect(gameUi,SIGNAL(deleteGameWindow()),this,SLOT(deleteGameWindow()));
+    connect(gameUi,SIGNAL(levelWin(bool)),this,SLOT(levelSucess(bool)));
 
     //Passes player info gameScreen
     gameUi->setPlayerInfo(userName,userLevel);
@@ -122,6 +123,28 @@ void MainWindow::deleteExistUserDialog()
     //Calls the ExistingUserDialog destructor
     delete existUserUi;
     existUserUi = NULL;
+}
+
+void MainWindow::levelSucess(bool win)
+{
+    delete gameUi;
+
+    if(win) //Increases the level by 1 if last game was won
+        userLevel = QString::number(userLevel.toInt() + 1);
+
+    //Creates a  new GameWindow object and connects it to the main window
+    gameUi = new GameScreen;
+    connect(gameUi,SIGNAL(showMainWindow()),this,SLOT(show()));
+    connect(gameUi,SIGNAL(deleteGameWindow()),this,SLOT(deleteGameWindow()));
+    connect(gameUi,SIGNAL(levelWin(bool)),this,SLOT(levelSucess(bool)));
+
+    //Passes player info gameScreen
+    gameUi->setPlayerInfo(userName,userLevel);
+
+    //Opens the game window and updates status message
+    gameUi->show();
+    hide(); //hides the mainwindow while game window is active
+
 }
 
 QString MainWindow::getStatusMessage()
