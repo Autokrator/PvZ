@@ -2,6 +2,7 @@
 #include <QDebug>
 
 int Zombie::zombiesAlive = 0;
+bool Zombie::zombiesWin = false;
 
 Zombie::Zombie()
 {

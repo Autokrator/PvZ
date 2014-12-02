@@ -17,6 +17,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    static QString userName;  //holds user name information
+    static QString userLevel; //holds level information for active user
 
 private slots:
     void on_newUserButton_clicked();
@@ -42,8 +44,6 @@ private:
     GameScreen *gameUi; //game window for when to start the game
     NewUserDialog *newUserUi;
     ExistingUserDialog *existUserUi;
-    static QString userName;  //holds user name information
-    static QString userLevel; //holds level information for active user
     QString getStatusMessage(); //gets the status message
     void checkForSetUser(); //checks to see if valid username is set
 };

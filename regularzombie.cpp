@@ -7,6 +7,8 @@ RegularZombie::RegularZombie(QRect *spawn_row)
     xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
+    spawnRowX = spawn_row->x();
+
     this->setPos(xCordinate,yCordinate);
 
     zombieImage = new QPixmap(":/Images/regularZombie");
@@ -55,6 +57,7 @@ void RegularZombie::advance(int phase)
 {
     if(!phase) return;
 
+    //Deletes when health is below 0
     if(zombieLife <= 0)
     {
         delete this;
@@ -77,6 +80,10 @@ void RegularZombie::advance(int phase)
 
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
+
+    //Checks if zombies are past homeblock
+    if(this->x() < spawnRowX - zombieImage->width())
+        zombiesWin = true;
 }
 
 void RegularZombie::move()

@@ -1,8 +1,9 @@
 #include "gamescreen.h"
 #include <QDebug>
+#include "mainwindow.h"
 
 GameScreen::GameScreen(QWidget *parent) :
-    QGraphicsView(parent), sunSpawnInterval(10000), playerName("Guest"), playerLevel("1"),
+    QGraphicsView(parent), sunSpawnInterval(10000),
     mouseCursor(0), lastZombieSpawned(false)
 {
     //Makes a graphics view of following size
@@ -208,8 +209,6 @@ void GameScreen::setPlayerInfo(QString name, QString level)
     //Sets player in for gamescreen and hud instance
     Hud->user = name;
     Hud->level = level;
-    playerName = name;
-    playerLevel = level;
 }
 
 void GameScreen::closeEvent(QCloseEvent *event)
@@ -670,7 +669,7 @@ void GameScreen::loadLevel()
         temp_list = read_level.readLine().split(':');
         temp_level = temp_list.at(0);
 
-        if(temp_level == playerLevel) //searches for current level
+        if(temp_level == MainWindow::userLevel) //searches for current level
         {
             //Extracts level information from file
             zombieSequence = temp_list.at(1).split(',');
@@ -952,16 +951,23 @@ void GameScreen::checkSunPoints()
 
     if(lastZombieSpawned && Zombie::zombiesAlive == 0)
     {
-        playerLevel = QString::number(playerLevel.toInt() + 1);
-
         QMessageBox::StandardButton response;
         response = QMessageBox::information(this,"Win","Congratulations! You beat the level.",QMessageBox::Ok);
 
         if(response == QMessageBox::Ok)
-        {
-            loadLevel();
             levelWin(true);
-        }
+    }
+    else if(Zombie::zombiesAlive != 0 && Zombie::zombiesWin) //case where zombies win
+    {
+        Zombie::zombiesWin = false;
+        QMessageBox::StandardButton response;
+        response = QMessageBox::information(this,"Loss","Zombies have eaten your brains! Would you like to retry?.",
+                                            QMessageBox::Yes|QMessageBox::No);
+
+        if(response == QMessageBox::Yes)
+            levelWin(false);
+        else if(response == QMessageBox::No)
+            close();
     }
 
 }

@@ -6,6 +6,8 @@ NewspaperZombie::NewspaperZombie(QRect *spawn_row)
     xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
+    spawnRowX = spawn_row->x();
+
     this->setPos(xCordinate,yCordinate);
 
     zombieImage = new QPixmap(":/Images/newspaperzombie");
@@ -78,6 +80,10 @@ void NewspaperZombie::advance(int phase)
 
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
+
+    //Checks if zombies are past homeblock
+    if(this->x() < spawnRowX - zombieImage->width())
+        zombiesWin = true;
 }
 
 void NewspaperZombie::move()

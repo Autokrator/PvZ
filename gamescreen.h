@@ -46,9 +46,7 @@ private:
     const int sunSpawnInterval; //The interval between each sun spawn
     Sun *sun; //Used to make a new sun object
 
-    GameHud *Hud; //Used to make a hud object to display dynamic information
-    QString playerName; //Holds the current player information
-    QString playerLevel; //Holds the current level information
+    GameHud *Hud; //Used to make a hud object to display dynamic informatio
     QCursor *mouseCursor; //Used to change cursor throughout various game scenarios
     int mouseState; /*Used to indicate plant selection
                                  0 = default, 1 = peashooter, 2 = sunflower... 8*/

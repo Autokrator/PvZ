@@ -6,6 +6,8 @@ FlagZombie::FlagZombie(QRect *spawn_row)
     xCordinate = spawn_row->x() + spawn_row->width();
     yCordinate = spawn_row->y();
 
+    spawnRowX = spawn_row->x();
+
     this->setPos(xCordinate,yCordinate);
 
     zombieImage = new QPixmap(":/Images/flagzombie");
@@ -14,7 +16,7 @@ FlagZombie::FlagZombie(QRect *spawn_row)
     zombieLife = 10;
     damage = 1;
     attackRate = 500;
-    xVelocity = 0.45;
+    xVelocity = 10;
 
     attackCounter = new QTime;
 
@@ -74,6 +76,10 @@ void FlagZombie::advance(int phase)
     }
     move(); //moves zombie based on velocity
     this->setPos(xCordinate,yCordinate); //updates pos
+
+    //Checks if zombies are past homeblock
+    if(this->x() < spawnRowX - zombieImage->width())
+        zombiesWin = true;
 }
 
 void FlagZombie::move()

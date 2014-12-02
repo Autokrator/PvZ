@@ -11,9 +11,11 @@ public:
     void setSlowEffect(); //decreases the current velocity of zombie by 50% and sets isSlowed as true
     bool getSlowStatus() const; //retunr isSlowed status condition of zombie
     static int zombiesAlive; //monitors how many zombies are alive at any given moment
+    static bool zombiesWin; //True when zombies reach end
 
 protected:
     double xCordinate; //x coordinate of zombie
+    int spawnRowX; //x coordinate of spawn row, used to check when zombie is past the lawn
     int yCordinate; //y coordinate of zombie
     int equipmentLife; //life of equipment
     int zombieLife; //life of the zombie
